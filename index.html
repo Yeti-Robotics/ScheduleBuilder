@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="vendor/jquery/jquery-ui.min.css">
+	<link rel="stylesheet" href="vendor/bootstrap/bootstrap.min.css">
+	<script src="vendor/jquery/jquery-1.12.3.min.js"></script>
+	<script src="vendor/jquery/jquery-ui.min.js"></script>
+	<script src="vendor/bootstrap/bootstrap.min.js"></script>
+	<script src="js/ScheduleBuilder.js"></script>
+</head>
+
+<body>
+	<div id="Builder" class="hidden">
+		<div id="people" class="hidden"></div>
+		<div id="skills" class="hidden"></div>
+		<div id="multi-skill-roles" class="hidden"></div>
+		<div id="team-archetypes" class="hidden"></div>
+		<div id="teams" class="hidden"></div>
+		<ul class="nav nav-pills">
+			<li role="presentation" class="active"><a href="#" onclick="bringForward('people')">People</a></li>
+			<li role="presentation" class="active"><a href="#" onclick="bringForward('skills')">Skills</a></li>
+			<li role="presentation"><a href="#" onclick="bringForward('multi-skill-roles')">Multi Skill Roles</a></li>
+			<li role="presentation"><a href="#" onclick="bringForward('team-archetypes')">Team Archetypes</a></li>
+			<li role="presentation"><a href="#" onclick="bringForward('teams')">Teams</a></li>
+			<li role="presentation"><a href="#" onclick="bringForward('schedule')">Schedule</a></li>
+		</ul>
+	</div>
+	<div id="Intro">
+		<h1>Welcome to schedule builder!</h1>
+		<p>Click <button type="button" class="btn btn-default" onclick="startBuilder()">Here</button> to begin a new schedule</p>
+	</div>
+</body>
+
+</html>
