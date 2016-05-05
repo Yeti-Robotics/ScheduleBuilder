@@ -1,2 +1,13 @@
-# ScheduleBuilder
-A web app designed to make building the schedule for competitions a breeze
+# To-Do List
+- [ ] Main page
+  - [ ] Table of competitions that link to schedule of each competition
+  - [ ] Last (or first) for its button to make a new schedule
+- [ ] List of students page
+  - [ ] Table of students and their attributes
+  - [ ] Button to edit student attributes
+- [ ] Schedule builder page
+  - [ ] Competition names field
+  - [ ] Button to create time shifts
+  - [ ] If possible, overview of schedule should look something like the day view of Google Calendar
+    - [ ] Clicking each shift should trigger a modal that has a checklist of all eligible students for that shift 
+    - [ ] Able to drag around time shifts
