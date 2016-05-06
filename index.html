@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="app">
 
 <head>
 	<meta charset="utf-8">
@@ -8,28 +8,30 @@
 	<script src="vendor/jquery/jquery-1.12.3.min.js"></script>
 	<script src="vendor/jquery/jquery-ui.min.js"></script>
 	<script src="vendor/bootstrap/bootstrap.min.js"></script>
+	<script type="text/javascript" src="vendor/angular/angular.min.js"></script>
 	<script src="js/ScheduleBuilder.js"></script>
 </head>
 
 <body>
-	<div id="Builder" class="hidden">
+	<div id="Builder" ng-controller="ScheduleBuilderController" class="hidden">
 		<div id="people" class="hidden"></div>
 		<div id="skills" class="hidden"></div>
 		<div id="multi-skill-roles" class="hidden"></div>
 		<div id="team-archetypes" class="hidden"></div>
 		<div id="teams" class="hidden"></div>
 		<ul class="nav nav-pills">
-			<li role="presentation" class="active"><a href="#" onclick="bringForward('people')">People</a></li>
-			<li role="presentation" class="active"><a href="#" onclick="bringForward('skills')">Skills</a></li>
-			<li role="presentation"><a href="#" onclick="bringForward('multi-skill-roles')">Multi Skill Roles</a></li>
-			<li role="presentation"><a href="#" onclick="bringForward('team-archetypes')">Team Archetypes</a></li>
-			<li role="presentation"><a href="#" onclick="bringForward('teams')">Teams</a></li>
-			<li role="presentation"><a href="#" onclick="bringForward('schedule')">Schedule</a></li>
+			<li role="presentation" class="active"><a ng-click="bringForward('people')">People</a></li>
+			<li role="presentation" class="active"><a ng-click="bringForward('skills')">Skills</a></li>
+			<li role="presentation"><a ng-click="bringForward('multi-skill-roles')">Multi Skill Roles</a></li>
+			<li role="presentation"><a ng-click="bringForward('team-archetypes')">Team Archetypes</a></li>
+			<li role="presentation"><a ng-click="bringForward('teams')">Teams</a></li>
+			<li role="presentation"><a ng-click="bringForward('schedule')">Schedule</a></li>
 		</ul>
 	</div>
-	<div id="Intro">
+	<div id="Intro" ng-controller="InfoPageController">
 		<h1>Welcome to schedule builder!</h1>
-		<p>Click <button type="button" class="btn btn-default" onclick="startBuilder()">Here</button> to begin a new schedule</p>
+		<p>Click
+			<button type="button" class="btn btn-default" ng-click="startBuilder(false)">Here</button> to begin a new schedule</p>
 	</div>
 </body>
 

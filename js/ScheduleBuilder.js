@@ -1,57 +1,53 @@
-var templateBuild = {
-	students: [
-		{
-			name: "Admin McCoolPants",
-			skills: [0, 1]
+var app;
+app = angular.module('app', []);
+
+app.controller("InfoPageController", function ($rootScope, $scope) {
+	$scope.templateBuild = {
+		students: [
+			{
+				name: "Admin McCoolPants",
+				skills: [0, 1]
 		}
 	],
-	skills: [{
-		name: "Awesomeness"
+		skills: [{
+			name: "Awesomeness"
 	}, {
-		name: "Coolness"
+			name: "Coolness"
 	}],
-	multiSkillRoles: [{
-		name: "System Admin",
-		requires: [0, 1]
-	}],
-	teamArchetypes: [{
-		name: "Doing Stuff Team",
-		roles: [{
-			name: "Leader",
+		multiSkillRoles: [{
+			name: "System Admin",
 			requires: [0, 1]
+	}],
+		teamArchetypes: [{
+			name: "Doing Stuff Team",
+			roles: [{
+				name: "Leader",
+				requires: [0, 1]
 		}]
 	}],
-	teams: [{
-		name: "A-Team",
-		archetype: [0],
-		members: {
-			Leader: 0
-		}
+		teams: [{
+			name: "A-Team",
+			archetype: [0],
+			members: {
+				Leader: 0
+			}
 	}]
-};
+	};
 
-var students = {};
-var skills = {};
-var multiSkillRoles = {};
-var teamArchetypes = {};
-var teams = {};
+	$scope.startBuilder = function (build) {
+		if (build) {
+			$rootScope.build = build;
+		} else {
+			$rootScope.build = $scope.templateBuild;
+		}
+		$("#Intro").addClass("hidden");
+		$("#Builder").removeClass("hidden");
+	};
+});
 
-function startBuilder(build) {
-	if (!build) {
-		build = templateBuild;
-	}
-	$("#Intro").addClass("hidden");
-	$("#Builder").removeClass("hidden");
-	students = build.students;
-	skills = build.skills;
-	multiSkillRoles = build.multiSkillRoles;
-	teamArchetypes = build.teamArchetypes;
-	teams = build.teams;
-
-}
-
-function bringForward(panel) {
-	switch (panel) {
+app.controller("ScheduleBuilderController", function ($rootScope, $scope) {
+	$scope.bringForward = function (panel) {
+		switch (panel) {
 		case 'people':
 			break;
 		case 'skills':
@@ -64,8 +60,6 @@ function bringForward(panel) {
 			break;
 		case 'schedule':
 			break;
+		}
 	}
-}
-$(document).ready(function () {
-
 });
