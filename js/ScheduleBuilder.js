@@ -3,35 +3,37 @@ app = angular.module('app', []);
 
 app.controller("InfoPageController", function ($rootScope, $scope) {
 	$scope.templateBuild = {
-		students: [
-			{
-				name: "Admin McCoolPants",
+		people: {
+			"Admin McCoolPants": {
 				skills: [0, 1]
-		}
-	],
-		skills: [{
-			name: "Awesomeness"
-	}, {
-			name: "Coolness"
-	}],
-		multiSkillRoles: [{
-			name: "System Admin",
-			requires: [0, 1]
-	}],
-		teamArchetypes: [{
-			name: "Doing Stuff Team",
-			roles: [{
-				name: "Leader",
-				requires: [0, 1]
-		}]
-	}],
-		teams: [{
-			name: "A-Team",
-			archetype: [0],
-			members: {
-				Leader: 0
 			}
-	}]
+		},
+		skills: [
+			"Awesomeness",
+			"Coolness"
+		],
+		multiSkillRoles: {
+			"System Admin": {
+				requires: [0, 1]
+			}
+		},
+		teamArchetypes: {
+			"Doing Stuff Team": {
+				roles: {
+					Leader: {
+						requires: [0, 1]
+					}
+				}
+			}
+		},
+		teams: {
+			"A-Team": {
+				archetype: "Doing Stuff Team",
+				members: {
+					Leader: "Admin McCoolPants"
+				}
+			}
+		}
 	};
 
 	$scope.startBuilder = function (build) {
