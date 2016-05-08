@@ -6,6 +6,9 @@ app.controller("InfoPageController", function ($rootScope, $scope) {
 		people: {
 			"Admin McCoolPants": {
 				skills: [0, 1]
+			},
+			"Cool Guy": {
+				skills: [0]
 			}
 		},
 		skills: [
@@ -48,6 +51,48 @@ app.controller("InfoPageController", function ($rootScope, $scope) {
 });
 
 app.controller("ScheduleBuilderController", function ($rootScope, $scope) {
+	$scope.new = {
+		person: "",
+		skill: "",
+		multiSkillRole: "",
+		teamArchetype: "",
+		team: ""
+	};
+
+	$scope.add = function (addMode) {
+		switch (addMode) {
+		case "Person":
+			$rootScope.build.people[$scope.new.person] = {
+				skills: []
+			};
+			$scope.new.person = "";
+			break;
+		case "Skill":
+			$rootScope.build.skills.push($scope.new.skill);
+			$scope.new.skill = "";
+			break;
+		case "MultiSkillRole":
+			$rootScope.build.multiSkillRoles[$scope.new.multiSkillRole] = {
+				requires: []
+			};
+			$scope.new.multiSkillRole = "";
+			break;
+		case "teamArchetype":
+			$rootScope.build.teamArchetypes[$scope.new.teamArchetype] = {
+				roles: {}
+			};
+			$scope.new.teamArchetype = "";
+			break;
+		case "Team":
+			$rootScope.build.teams[$scope.new.team] = {
+				archetype: "",
+				members: {}
+			};
+			$scope.new.team = "";
+			break;
+		}
+	};
+
 	$scope.bringForward = function (panel) {
 		switch (panel) {
 		case 'people':

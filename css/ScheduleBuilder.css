@@ -11,8 +11,13 @@
 .panel-item {
 	margin: 5px;
 	padding-left: 2px;
-	height: 20px;
+	height: auto;
 	width: 90%;
+	border-radius: 5px;
+}
+
+.addfield {
+	height: auto;
 	border-radius: 5px;
 }
 
