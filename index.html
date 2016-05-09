@@ -54,6 +54,10 @@
 				<div class="panel-item multi-skill-role" ng-repeat="(name, role) in teamArchetype.roles">{{name}}
 					<div class="skill panel-item" ng-repeat="skill in role.requires">{{build.skills[skill]}}</div>
 				</div>
+				<div class="panel-item">
+					<input type="text" ng-model="teamArchetype.newrole" class="addfield multi-skill-role">
+					<button type="button" class="addfield multi-skill-role" ng-click="addArchetypeRole(name)">+ Role</button>
+				</div>
 			</div>
 			<div class="panel-item">
 				<input type="text" ng-model="new.teamArchetype" class="addfield team-archetype">
@@ -61,7 +65,7 @@
 			</div>
 		</div>
 		<div id="teams" class="hidden panel">
-			<div class="panel-item team" ng-repeat="(name, team) in build.teams">{{name}} (archetype: {{team.archetype}})
+			<div class="panel-item team" ng-repeat="(name, team) in build.teams">{{name}} (archetype: <select ng-model="team.archetype" ng-options="name as name for (name, teamArchetype) in build.teamArchetypes" ng-change="updateRoles(name)"></select>)
 				<div class="panel-item multi-skill-role" ng-repeat="(roleName, role) in build.teamArchetypes[team.archetype].roles">{{roleName}}
 					<div class="person inline">{{team.members[roleName]}}</div>
 				</div>

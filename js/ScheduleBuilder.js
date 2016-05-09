@@ -26,7 +26,8 @@ app.controller("InfoPageController", function ($rootScope, $scope) {
 					Leader: {
 						requires: [0, 1]
 					}
-				}
+				},
+				newrole: ""
 			}
 		},
 		teams: {
@@ -92,6 +93,18 @@ app.controller("ScheduleBuilderController", function ($rootScope, $scope) {
 			break;
 		}
 	};
+
+	$scope.addArchetypeRole = function (archetype) {
+		$rootScope.build.teamArchetypes[archetype].roles[$rootScope.build.teamArchetypes[archetype].newrole] = {requires : []};
+		$rootScope.build.teamArchetypes[archetype].newrole = "";
+	};
+
+	$scope.updateRoles = function (team) {
+		$rootScope.build.teams[team].members = {};
+		for (var role in $rootScope.build.teamArchetypes[$rootScope.build.teams[team].archetype].roles) {
+			$rootScope.build.teams[team].members[role] = "";
+		}
+	}
 
 	$scope.bringForward = function (panel) {
 		switch (panel) {
