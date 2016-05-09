@@ -1,0 +1,195 @@
+{
+    "_id": {
+        "$oid": "5730e0aeb3f30a5c0ce9642c"
+    },
+    "schedule": "Guilford",
+    "people": {
+        "Matthew": {
+            "skills": [
+                1,
+                3,
+                5
+            ]
+        },
+        "Sam": {
+            "skills": [
+                0,
+                1,
+                3,
+                4
+            ]
+        },
+        "Antonio": {
+            "skills": [
+                1,
+                4
+            ]
+        },
+        "Caehlin": {
+            "skills": [
+                1,
+                5
+            ]
+        },
+        "Paul": {
+            "skills": [
+                0,
+                2,
+                6
+            ]
+        },
+        "Tyler": {
+            "skills": [
+                3,
+                2
+            ]
+        },
+        "Maddy": {
+            "skills": [
+                0,
+                4
+            ]
+        },
+        "Tanisha": {
+            "skills": [
+                0,
+                4
+            ]
+        },
+        "Ben": {
+            "skills": []
+        }
+    },
+    "skills": [
+        "Leadership",
+        "Programmer",
+        "Mechanical",
+        "Pit Crew",
+        "Pit Presenter",
+        "Scouting Lead",
+        "Driveteam"
+    ],
+    "multiSkillRoles": {
+        "Pit Lead": {
+            "requires": [
+                3
+            ]
+        },
+        "Pit Programmer": {
+            "requires": [
+                1,
+                3
+            ]
+        }
+    },
+    "teamArchetypes": {
+        "scoutingTeam": {
+            "roles": {
+                "lead": {
+                    "requires": [
+                        0,
+                        1
+                    ]
+                },
+                "red1": {
+                    "requires": []
+                },
+                "red2": {
+                    "requires": []
+                },
+                "red3": {
+                    "requires": []
+                },
+                "blue1": {
+                    "requires": []
+                },
+                "blue2": {
+                    "requires": []
+                },
+                "blue3": {
+                    "requires": []
+                }
+            }
+        },
+        "pitPresenterTeam": {
+            "roles": {
+                "pp1": {
+                    "requires": [
+                        4
+                    ]
+                },
+                "pp2": {
+                    "requires": [
+                        4
+                    ]
+                }
+            }
+        }
+    },
+    "teams": {
+        "scoutingTeamA": {
+            "archetype": "scoutingTeam",
+            "members": {
+                "lead": "Caehlin",
+                "red1": "Ben",
+                "red2": "Ben",
+                "red3": "Ben",
+                "blue1": "Ben",
+                "blue2": "Ben",
+                "blue3": "Ben"
+            }
+        },
+        "scoutingTeamB": {
+            "archetype": "scoutingTeam",
+            "members": {
+                "lead": "Matthew",
+                "red1": "Sam",
+                "red2": "Antonio",
+                "red3": "Paul",
+                "blue1": "Maddy",
+                "blue2": "Tyler",
+                "blue3": "Tanisha"
+            }
+        },
+        "pitPresenterTeamA": {
+            "archetype": "pitPresenterTeam",
+            "members": {
+                "pp1": "Tanisha",
+                "pp2": "Maddy"
+            }
+        },
+        "pitPresenterTeamB": {
+            "archetype": "pitPresenterTeam",
+            "members": {
+                "pp1": "Antonio",
+                "pp2": "Matthew"
+            }
+        }
+    },
+    "days": [
+        {
+            "shifts": [
+                {
+                    "start": "12:00",
+                    "end": "12:00",
+                    "pit": {
+                        "pitLead": "Tyler",
+                        "programmer": "Sam",
+                        "pitPresenters": "pitPresenterTeamA"
+                    },
+                    "scoutingTeam": "A"
+                },
+                {
+                    "start": "12:00",
+                    "end": "2:30",
+                    "pit": {
+                        "pitLead": "Paul",
+                        "programmer": "Matthew",
+                        "pitPresenters": "pitPresenterTeamB"
+                    },
+                    "scoutingTeam": "B"
+                }
+            ]
+        }
+    ]
+}
