@@ -1,13 +1,9 @@
 <?php
 
-$username = "";
-$password = "";
-$mongoServer = "";
-$connection = new MongoClient($mongoServer);
-$collection = $connection->schedule_builder->schedules;
+include("connect.php");
+include("functions.php");
 
-$schedule = $collection->findOne();
-
+$schedule = getSchedule($collection, "Guilford");
 var_dump($schedule);
 
 ?>
