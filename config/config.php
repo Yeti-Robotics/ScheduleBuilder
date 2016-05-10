@@ -1,7 +1,0 @@
-<?php
-
-$username = "";
-$password = "";
-$mongoServer = "";
-
-?>
