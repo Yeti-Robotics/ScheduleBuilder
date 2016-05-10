@@ -24,7 +24,7 @@
 			<li id="schedule-tab" class="tab"><a ng-click="bringForward('schedule')">Schedule</a></li>
 		</ul>
 		<div id="people" class="well hidden panel">
-			<div ng-repeat="(name, person) in build.people" class="panel-item person well well-sm"><span class="large">{{name}}</span>
+			<div ng-repeat="(name, person) in build.people" class="panel-item draggable-person well well-sm" ng-init="refreshPeopleDraggability()" id="{{name}}"><span class="large">{{name}}</span>
 				<div class="skill list-group-item panel-item" ng-repeat="skill in person.skills">{{build.skills[skill]}}
 				</div>
 			</div>
@@ -34,16 +34,16 @@
 			</div>
 		</div>
 		<div id="skills" class="well hidden panel">
-			<div class="panel-item list-group-item" ng-repeat="skill in build.skills">{{skill}}</div>
+			<div class="panel-item list-group-item draggable-skill" ng-repeat="skill in build.skills track by $index" ng-init="refreshSkillDraggability()" id="{{$index}}">{{skill}}</div>
 			<div class="panel-add-item">
 				<input type="text" ng-model="new.skill" class="addfield skill">
-				<button type="button" class="addbutton skill btn" ng-click="add('Skill')">Add Skill</button>
+				<button type="button" class="addbutton btn" ng-click="add('Skill')">Add Skill</button>
 			</div>
 		</div>
 		<div id="multi-skill-roles" class="well hidden panel">
-			<div class="well well-sm panel-item multi-skill-role" ng-repeat="(name, multiSkillRole) in build.multiSkillRoles">
+			<div class="well well-sm panel-item draggable-multi-skill-role" ng-repeat="(name, multiSkillRole) in build.multiSkillRoles">
 				{{name}}
-				<div class="skill panel-item list-group-item" ng-repeat="skill in multiSkillRole.requires">{{build.skills[skill]}}</div>
+				<div class="panel-item list-group-item" ng-repeat="skill in multiSkillRole.requires">{{build.skills[skill]}}</div>
 			</div>
 			<div class="panel-add-item">
 				<input type="text" ng-model="new.multiSkillRole" class="addfield multi-skill-role">
@@ -51,7 +51,7 @@
 			</div>
 		</div>
 		<div id="team-archetypes" class="well hidden panel">
-			<div class="well well-sm panel-item team-archetype" ng-repeat="(name, teamArchetype) in build.teamArchetypes">{{name}}
+			<div class="well well-sm panel-item draggable-team-archetype" ng-repeat="(name, teamArchetype) in build.teamArchetypes">{{name}}
 				<div class="panel-item team-role" ng-repeat="(name, role) in teamArchetype.roles">{{name}}
 					<div class="skill panel-item list-group-item" ng-repeat="skill in role.requires">{{build.skills[skill]}}</div>
 				</div>
@@ -61,12 +61,12 @@
 				</div>
 			</div>
 			<div class="panel-add-item">
-				<input type="text" ng-model="new.teamArchetype" class="addfield team-archetype">
+				<input type="text" ng-model="new.teamArchetype" class="addfield draggable-team-archetype">
 				<button type="button" class="btn addbutton team-archetype" ng-click="add('teamArchetype')">Add Archetype</button>
 			</div>
 		</div>
 		<div id="teams" class="well hidden panel">
-			<div class="well well-sm panel-item team" ng-repeat="(name, team) in build.teams">{{name}} (archetype:
+			<div class="well well-sm panel-item draggable-team" ng-repeat="(name, team) in build.teams">{{name}} (archetype:
 				<select ng-model="team.archetype" ng-options="name as name for (name, teamArchetype) in build.teamArchetypes" ng-change="updateRoles(name)"></select>)
 				<div class="panel-item team-role" ng-repeat="(roleName, role) in build.teamArchetypes[team.archetype].roles">{{roleName}}
 					<div class="person inline">{{team.members[roleName]}}</div>

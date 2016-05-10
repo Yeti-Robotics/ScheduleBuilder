@@ -46,6 +46,9 @@
 	background-color: #808080;
 }
 
+.droppable {
+    padding-bottom: 50px;
+}
 
 /*
 #people {
