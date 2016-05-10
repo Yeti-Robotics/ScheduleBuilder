@@ -3,9 +3,9 @@
 
 <head>
 	<meta charset="utf-8">
+	<link rel="stylesheet" href="css/ScheduleBuilder.css">
 	<link rel="stylesheet" href="vendor/jquery/jquery-ui.min.css">
 	<link rel="stylesheet" href="vendor/bootstrap/bootstrap.min.css">
-	<link rel="stylesheet" href="css/ScheduleBuilder.css">
 	<script src="vendor/jquery/jquery-1.12.3.min.js"></script>
 	<script src="vendor/jquery/jquery-ui.min.js"></script>
 	<script src="vendor/bootstrap/bootstrap.min.js"></script>
@@ -25,57 +25,56 @@
 		</ul>
 		<div id="people" class="well hidden panel">
 			<div ng-repeat="(name, person) in build.people" class="panel-item person well well-sm"><span class="large">{{name}}</span>
-				<div class="panel-item skill" ng-repeat="skill in person.skills">{{build.skills[skill]}}</div>
+				<div class="skill list-group-item panel-item" ng-repeat="skill in person.skills">{{build.skills[skill]}}
+				</div>
 			</div>
-			<div class="panel-item">
+			<div class="panel-add-item">
 				<input type="text" ng-model="new.person" class="addfield person">
-				<button type="button" class="addfield person btn" ng-click="add('Person')">Add Person</button>
+				<button type="button" class="addbutton person btn" ng-click="add('Person')">Add Person</button>
 			</div>
 		</div>
 		<div id="skills" class="well hidden panel">
-			<div class="panel-item skill" ></div>
-			<ul class="list-group">
-				<li class="list-group-item" ng-repeat="skill in build.skills">{{skill}}</li>
-				<li class="list-group-item">
-					<input type="text" ng-model="new.skill" class="addfield skill">
-					<button type="button" class="addfield skill btn" ng-click="add('Skill')">Add Skill</button>
-				</li>
-			</ul>
+			<div class="panel-item list-group-item" ng-repeat="skill in build.skills">{{skill}}</div>
+			<div class="panel-add-item">
+				<input type="text" ng-model="new.skill" class="addfield skill">
+				<button type="button" class="addbutton skill btn" ng-click="add('Skill')">Add Skill</button>
+			</div>
 		</div>
 		<div id="multi-skill-roles" class="well hidden panel">
 			<div class="well well-sm panel-item multi-skill-role" ng-repeat="(name, multiSkillRole) in build.multiSkillRoles">
 				{{name}}
-				<div class="skill panel-item" ng-repeat="skill in multiSkillRole.requires">{{build.skills[skill]}}</div>
+				<div class="skill panel-item list-group-item" ng-repeat="skill in multiSkillRole.requires">{{build.skills[skill]}}</div>
 			</div>
-			<div class="panel-item">
+			<div class="panel-add-item">
 				<input type="text" ng-model="new.multiSkillRole" class="addfield multi-skill-role">
-				<button type="button" class="btn addfield multi-skill-role" ng-click="add('MultiSkillRole')">Add Role</button>
+				<button type="button" class="btn addbutton multi-skill-role" ng-click="add('MultiSkillRole')">Add Role</button>
 			</div>
 		</div>
 		<div id="team-archetypes" class="well hidden panel">
 			<div class="well well-sm panel-item team-archetype" ng-repeat="(name, teamArchetype) in build.teamArchetypes">{{name}}
-				<div class="panel-item multi-skill-role" ng-repeat="(name, role) in teamArchetype.roles">{{name}}
-					<div class="skill panel-item" ng-repeat="skill in role.requires">{{build.skills[skill]}}</div>
+				<div class="panel-item team-role" ng-repeat="(name, role) in teamArchetype.roles">{{name}}
+					<div class="skill panel-item list-group-item" ng-repeat="skill in role.requires">{{build.skills[skill]}}</div>
 				</div>
-				<div class="panel-item">
+				<div class="panel-add-item">
 					<input type="text" ng-model="teamArchetype.newrole" class="addfield multi-skill-role">
-					<button type="button" class="btn addfield multi-skill-role" ng-click="addArchetypeRole(name)">Add Role</button>
+					<button type="button" class="btn addbutton multi-skill-role" ng-click="addArchetypeRole(name)">Add Role</button>
 				</div>
 			</div>
-			<div class="panel-item">
+			<div class="panel-add-item">
 				<input type="text" ng-model="new.teamArchetype" class="addfield team-archetype">
-				<button type="button" class="btn addfield team-archetype" ng-click="add('teamArchetype')">Add Team Archetype</button>
+				<button type="button" class="btn addbutton team-archetype" ng-click="add('teamArchetype')">Add Archetype</button>
 			</div>
 		</div>
 		<div id="teams" class="well hidden panel">
-			<div class="well well-sm panel-item team" ng-repeat="(name, team) in build.teams">{{name}} (archetype: <select ng-model="team.archetype" ng-options="name as name for (name, teamArchetype) in build.teamArchetypes" ng-change="updateRoles(name)"></select>)
-				<div class="panel-item multi-skill-role" ng-repeat="(roleName, role) in build.teamArchetypes[team.archetype].roles">{{roleName}}
+			<div class="well well-sm panel-item team" ng-repeat="(name, team) in build.teams">{{name}} (archetype:
+				<select ng-model="team.archetype" ng-options="name as name for (name, teamArchetype) in build.teamArchetypes" ng-change="updateRoles(name)"></select>)
+				<div class="panel-item team-role" ng-repeat="(roleName, role) in build.teamArchetypes[team.archetype].roles">{{roleName}}
 					<div class="person inline">{{team.members[roleName]}}</div>
 				</div>
 			</div>
-			<div class="panel-item">
+			<div class="panel-add-item">
 				<input type="text" ng-model="new.team" class="addfield team">
-				<button type="button" class="btn addfield team" ng-click="add('Team')">Add Team</button>
+				<button type="button" class="btn addbutton team" ng-click="add('Team')">Add Team</button>
 			</div>
 		</div>
 		<div id="schedule" class="hidden panel"></div>
