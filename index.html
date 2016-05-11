@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <link rel="stylesheet" href="css/ScheduleBuilder.css">
     <link rel="stylesheet" href="vendor/jquery/jquery-ui.min.css">
-    <link rel="stylesheet" href="vendor/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
     <script src="vendor/jquery/jquery-1.12.3.min.js"></script>
     <script src="vendor/jquery/jquery-ui.min.js"></script>
     <script src="vendor/bootstrap/bootstrap.min.js"></script>
@@ -25,7 +25,9 @@
         </ul>
         <div id="people" class="well hidden panel">
             <div ng-repeat="(name, person) in build.people" class="panel-item draggable-person well well-sm" ng-init="refreshPeopleDraggability()" id="{{name}}"><span class="large">{{name}}</span>
+               <button type="button" ng-click="removeRoot('Person', name)" class="btn badge"><span class="glyphicon glyphicon-remove"></span></button>
                 <div class="skill list-group-item panel-item" ng-repeat="skill in person.skills">{{build.skills[skill]}}
+                <button type="button" ng-click="removeStem('Skill', skill, person.skills)" class="btn badge"><span class="glyphicon glyphicon-remove"></span></button>
                 </div>
             </div>
             <div class="panel-add-item">
@@ -34,7 +36,8 @@
             </div>
         </div>
         <div id="skills" class="well hidden panel">
-            <div class="panel-item list-group-item draggable-skill" ng-repeat="skill in build.skills track by $index" ng-init="refreshSkillDraggability()" id="{{$index}}">{{skill}}</div>
+            <div class="panel-item list-group-item draggable-skill" ng-repeat="skill in build.skills track by $index" ng-init="refreshSkillDraggability()" id="{{$index}}">{{skill}}
+            <button type="button" ng-click="removeRoot('Skill', skill)" class="btn badge"><span class="glyphicon glyphicon-remove"></span></button></div>
             <div class="panel-add-item">
                 <input type="text" ng-model="new.skill" class="addfield skill">
                 <button type="button" class="addbutton btn" ng-click="add('Skill')">Add Skill</button>
@@ -43,7 +46,9 @@
         <div id="multi-skill-roles" class="well hidden panel">
             <div class="well well-sm panel-item draggable-multi-skill-role" ng-repeat="(name, multiSkillRole) in build.multiSkillRoles" ng-init="refreshMultiSkillRolesDraggability()" id="{{name}}">
                 {{name}}
-                <div class="panel-item list-group-item" ng-repeat="skill in multiSkillRole.requires">{{build.skills[skill]}}</div>
+                <button type="button" ng-click="removeRoot('MultiSkillRole', name)" class="btn badge"><span class="glyphicon glyphicon-remove"></span></button>
+                <div class="panel-item list-group-item" ng-repeat="skill in multiSkillRole.requires">{{build.skills[skill]}}
+                <button type="button" ng-click="removeStem('Skill', skill, multiSkillRole.requires)" class="btn badge"><span class="glyphicon glyphicon-remove"></span></button></div>
             </div>
             <div class="panel-add-item">
                 <input type="text" ng-model="new.multiSkillRole" class="addfield multi-skill-role">
@@ -52,8 +57,11 @@
         </div>
         <div id="team-archetypes" class="well hidden panel">
             <div class="well well-sm panel-item" ng-repeat="(name, teamArchetype) in build.teamArchetypes">{{name}}
+               <button type="button" ng-click="removeRoot('teamArchetype', name)" class="btn badge"><span class="glyphicon glyphicon-remove"></span></button>
                 <div class="panel-item draggable-team-role team-role" ng-repeat="(roleName, role) in teamArchetype.roles" ng-init="refreshTeamRoleDraggability()" id="{{name + '|' + roleName}}">{{roleName}}
-                    <div class="skill panel-item list-group-item" ng-repeat="skill in role.requires">{{build.skills[skill]}}</div>
+                   <button type="button" ng-click="removeRoot('archetypeRole', name, roleName)" class="btn badge"><span class="glyphicon glyphicon-remove"></span></button>
+                    <div class="skill panel-item list-group-item" ng-repeat="skill in role.requires">{{build.skills[skill]}}
+                    <button type="button" ng-click="removeStem('Skill', skill, role.requires)" class="btn badge"><span class="glyphicon glyphicon-remove"></span></button></div>
                 </div>
                 <div class="panel-add-item">
                     <input type="text" ng-model="teamArchetype.newrole" class="addfield multi-skill-role">
@@ -68,6 +76,7 @@
         <div id="teams" class="well hidden panel">
             <div class="well well-sm panel-item draggable-team" ng-repeat="(name, team) in build.teams">{{name}} (archetype:
                 <select ng-model="team.archetype" ng-options="name as name for (name, teamArchetype) in build.teamArchetypes" ng-change="updateRoles(name)"></select>)
+                <button type="button" ng-click="removeRoot('Team', name)" class="btn badge"><span class="glyphicon glyphicon-remove"></span></button>
                 <div class="panel-item team-role draggable-team-member" ng-repeat="(roleName, role) in build.teamArchetypes[team.archetype].roles" ng-init="refreshTeamMemberDraggability()" id="{{name + '|' + roleName}}">{{roleName}}
                     <div class="person inline">{{team.members[roleName]}}</div>
                 </div>
