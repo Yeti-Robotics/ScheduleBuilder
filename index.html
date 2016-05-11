@@ -16,17 +16,18 @@
 <body>
     <div id="Builder" ng-controller="ScheduleBuilderController" class="hidden">
         <ul class="nav nav-pills">
+            <li id="schedules-tab" class="tab"><a ng-click="bringForward('schedules')">Schedules</a></li>
             <li id="people-tab" class="tab"><a ng-click="bringForward('people')">People</a></li>
             <li id="skills-tab" class="tab"><a ng-click="bringForward('skills')">Skills</a></li>
             <li id="multi-skill-roles-tab" class="tab"><a ng-click="bringForward('multi-skill-roles')">Multi Skill Roles</a></li>
             <li id="team-archetypes-tab" class="tab"><a ng-click="bringForward('team-archetypes')">Team Archetypes</a></li>
             <li id="teams-tab" class="tab"><a ng-click="bringForward('teams')">Teams</a></li>
-            <li id="schedule-tab" class="tab"><a ng-click="bringForward('schedule')">Schedule</a></li>
+            <li id="schedule-builder-tab" class="tab"><a ng-click="bringForward('schedule-builder')">Schedule Builder</a></li>
         </ul>
         <div id="people" class="well hidden panel">
             <div ng-repeat="(name, person) in build.people" class="panel-item draggable-person well well-sm" ng-init="refreshPeopleDraggability()" id="{{name}}"><span class="large">{{name}}</span>
                <button type="button" ng-click="removeRoot('Person', name)" class="btn badge"><span class="glyphicon glyphicon-remove"></span></button>
-                <div class="skill list-group-item panel-item" ng-repeat="skill in person.skills">{{build.skills[skill]}}
+                <div id="{{skill}}" class="skill list-group-item panel-item" ng-repeat="skill in person.skills">{{build.skills[skill]}}
                 <button type="button" ng-click="removeStem('Skill', skill, person.skills)" class="btn badge"><span class="glyphicon glyphicon-remove"></span></button>
                 </div>
             </div>
@@ -77,8 +78,8 @@
             <div class="well well-sm panel-item draggable-team" ng-repeat="(name, team) in build.teams">{{name}} (archetype:
                 <select ng-model="team.archetype" ng-options="name as name for (name, teamArchetype) in build.teamArchetypes" ng-change="updateRoles(name)"></select>)
                 <button type="button" ng-click="removeRoot('Team', name)" class="btn badge"><span class="glyphicon glyphicon-remove"></span></button>
-                <div class="panel-item team-role draggable-team-member" ng-repeat="(roleName, role) in build.teamArchetypes[team.archetype].roles" ng-init="refreshTeamMemberDraggability()" id="{{name + '|' + roleName}}">{{roleName}}
-                    <div class="person inline">{{team.members[roleName]}}</div>
+                <div class="panel-item team-role draggable-team-member" ng-repeat="(roleName, role) in build.teamArchetypes[team.archetype].roles" ng-init="refreshTeamMemberDraggability(role)" id="{{name + '|' + roleName}}">{{roleName}}
+                    <span class="person pull-right">{{team.members[roleName]}}</span>
                 </div>
             </div>
             <div class="panel-add-item">
@@ -86,12 +87,17 @@
                 <button type="button" class="btn addbutton team" ng-click="add('Team')">Add Team</button>
             </div>
         </div>
-        <div id="schedule" class="hidden panel"></div>
+        <div id="schedule-builder" class="hidden panel"></div>
     </div>
     <div id="Intro" ng-controller="InfoPageController">
         <h1>Welcome to schedule builder!</h1>
-        <p>Click
-            <button type="button" class="btn btn-default" ng-click="startBuilder(false)">Here</button> to begin a new schedule</p>
+		<a ng-click="startBuilder(false)" href="" class="pull-right">Create new schedule <span class="glyphicon glyphicon-plus-sign text-success"></span></a>
+		<br/>
+		<div class="list-group">
+			<span class="list-group-item" ng-repeat="schedule in schedules">
+				{{schedule}} <a ng-click="getScheduleData(schedule)" href="" class="pull-right">Edit <span class="glyphicon glyphicon-edit text-info"></span></a>
+			</span>
+		</div>
     </div>
 </body>
 
