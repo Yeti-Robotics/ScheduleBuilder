@@ -284,8 +284,7 @@ app.controller("ScheduleBuilderController", function ($rootScope, $scope) {
 				}
 				
 				for (var requiredSkill in requiredSkills) {
-					console.log(requiredSkills[requiredSkill]);
-					if (requiredSkills[requiredSkill] != skills[requiredSkill]) {
+					if (!skills.hasOwnProperty("" + requiredSkill)) {
 						return false;
 					}
 				}
