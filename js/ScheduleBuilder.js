@@ -258,7 +258,7 @@ app.controller("ScheduleBuilderController", function ($rootScope, $scope) {
         });
     };
 
-    $scope.refreshTeamMemberDraggability = function () {
+    $scope.refreshTeamMemberDraggability = function (role) {
         $(".draggable-team-member").droppable({
             drop: function (event, ui) {
                 var memberName = ui.draggable[0].id;
@@ -268,7 +268,30 @@ app.controller("ScheduleBuilderController", function ($rootScope, $scope) {
                 $rootScope.build.teams[role[0]].members[role[1]] = memberName;
                 $scope.$apply();
             },
-            accept: ".draggable-person",
+            accept: function (dropped) {
+				var children = $(dropped).children();
+				var skills = {};
+				for (var i = 0; i < children.length; i++) {
+					if ($rootScope.build.skills.hasOwnProperty($(children[i]).attr("id"))) {
+						skills[$(children[i]).attr("id")] = $rootScope.build.skills[$(children[i]).attr("id")];
+					}
+				}
+				var requiredSkills = {};
+				for (var i = 0; i < role.requires.length; i++) {
+					if ($rootScope.build.skills.hasOwnProperty(role.requires[i])) {
+						requiredSkills[role.requires[i]] = $rootScope.build.skills[role.requires[i]];
+					}
+				}
+				
+				for (var requiredSkill in requiredSkills) {
+					console.log(requiredSkills[requiredSkill]);
+					if (requiredSkills[requiredSkill] != skills[requiredSkill]) {
+						return false;
+					}
+				}
+				
+				return true;
+			},
             addClasses: false,
             activeClass: "droppable"
         });

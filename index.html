@@ -27,7 +27,7 @@
         <div id="people" class="well hidden panel">
             <div ng-repeat="(name, person) in build.people" class="panel-item draggable-person well well-sm" ng-init="refreshPeopleDraggability()" id="{{name}}"><span class="large">{{name}}</span>
                <button type="button" ng-click="removeRoot('Person', name)" class="btn badge"><span class="glyphicon glyphicon-remove"></span></button>
-                <div class="skill list-group-item panel-item" ng-repeat="skill in person.skills">{{build.skills[skill]}}
+                <div id="{{skill}}" class="skill list-group-item panel-item" ng-repeat="skill in person.skills">{{build.skills[skill]}}
                 <button type="button" ng-click="removeStem('Skill', skill, person.skills)" class="btn badge"><span class="glyphicon glyphicon-remove"></span></button>
                 </div>
             </div>
@@ -78,8 +78,8 @@
             <div class="well well-sm panel-item draggable-team" ng-repeat="(name, team) in build.teams">{{name}} (archetype:
                 <select ng-model="team.archetype" ng-options="name as name for (name, teamArchetype) in build.teamArchetypes" ng-change="updateRoles(name)"></select>)
                 <button type="button" ng-click="removeRoot('Team', name)" class="btn badge"><span class="glyphicon glyphicon-remove"></span></button>
-                <div class="panel-item team-role draggable-team-member" ng-repeat="(roleName, role) in build.teamArchetypes[team.archetype].roles" ng-init="refreshTeamMemberDraggability()" id="{{name + '|' + roleName}}">{{roleName}}
-                    <div class="person inline">{{team.members[roleName]}}</div>
+                <div class="panel-item team-role draggable-team-member" ng-repeat="(roleName, role) in build.teamArchetypes[team.archetype].roles" ng-init="refreshTeamMemberDraggability(role)" id="{{name + '|' + roleName}}">{{roleName}}
+                    <span class="person pull-right">{{team.members[roleName]}}</span>
                 </div>
             </div>
             <div class="panel-add-item">
