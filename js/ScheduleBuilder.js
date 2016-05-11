@@ -117,7 +117,7 @@ app.controller("ScheduleBuilderController", function ($rootScope, $scope) {
     $scope.refreshPeopleDraggability = function () {
         $(".draggable-person").draggable({
             helper: "clone"
-        })
+        });
         $(".draggable-person").droppable({
             drop: function (event, ui) {
                 var newSkillId = parseInt(ui.draggable[0].id);
@@ -131,9 +131,63 @@ app.controller("ScheduleBuilderController", function ($rootScope, $scope) {
             accept: ".draggable-skill",
             addClasses: false,
             activeClass: "droppable"
-        })
+        });
 
-    }
+    };
+
+    $scope.refreshMultiSkillRolesDraggability = function () {
+        $(".draggable-multi-skill-role").draggable({
+            helper: "clone"
+        });
+        $(".draggable-multi-skill-role").droppable({
+            drop: function (event, ui) {
+                var newSkillId = parseInt(ui.draggable[0].id);
+                if ($.inArray(newSkillId, $rootScope.build.multiSkillRoles[event.target.id].requires) === -1) {
+                    $rootScope.build.multiSkillRoles[event.target.id].requires.push(newSkillId);
+                    $scope.$apply();
+                } else {
+                    console.log("That multi skill role already requires that skill!")
+                }
+            },
+            accept: ".draggable-skill",
+            addClasses: false,
+            activeClass: "droppable"
+        });
+    };
+
+    $scope.refreshTeamRoleDraggability = function () {
+        $(".draggable-team-role").droppable({
+            drop: function (event, ui) {
+                var newSkillId = parseInt(ui.draggable[0].id);
+                var role = event.target.id.split("|");
+                if ($.inArray(newSkillId, $rootScope.build.teamArchetypes[role[0]].roles[role[1]].requires) === -1) {
+                    $rootScope.build.teamArchetypes[role[0]].roles[role[1]].requires.push(newSkillId);
+                    $scope.$apply();
+                } else {
+                    console.log("That role already requires that skill!")
+                }
+            },
+            accept: ".draggable-skill",
+            addClasses: false,
+            activeClass: "droppable"
+        });
+    };
+
+    $scope.refreshTeamMemberDraggability = function () {
+        $(".draggable-team-member").droppable({
+            drop: function (event, ui) {
+                var memberName = ui.draggable[0].id;
+                var role = event.target.id.split("|");
+                console.log(memberName);
+                console.log(role);
+                $rootScope.build.teams[role[0]].members[role[1]] = memberName;
+                $scope.$apply();
+            },
+            accept: ".draggable-person",
+            addClasses: false,
+            activeClass: "droppable"
+        });
+    };
 
     $scope.bringForward = function (panel) {
         switch (panel) {
