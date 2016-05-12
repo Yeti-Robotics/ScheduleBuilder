@@ -2,7 +2,7 @@
 	height: 100%;
 }
 
-.panel {
+.sb-panel {
 	margin-left: 5px;
 	margin-right: 5px;
 	max-width: 48%;
@@ -10,7 +10,7 @@
 	border-radius: 10px;
 }
 
-.panel-item {
+.sb-panel-item {
 	margin: 5px;
 	padding-left: 15px;
 	padding-right: 15px;
@@ -18,7 +18,7 @@
 	border-radius: 5px;
 }
 
-.panel-add-item {
+.sb-panel-add-item {
 	margin: 5px;
 }
 
@@ -47,7 +47,16 @@
 }
 
 .droppable {
-    padding-bottom: 50px !important;
+	padding-bottom: 50px !important;
+}
+
+#schedule {
+	width: 100%;
+	max-width: none;
+}
+
+.timepicker {
+	width: auto;
 }
 
 /*
