@@ -323,7 +323,7 @@ app.controller("ScheduleBuilderController", function ($rootScope, $scope) {
 	};
 });
 
-app.controller("SchedulerController", function ($rootScope, $scope) {
+app.controller("SchedulerController", function ($rootScope, $scope, $timeout) {
 	$scope.currentDay = 0;
 	$scope.changeDay = function (index) {
 		$scope.currentDay = index;
@@ -337,8 +337,10 @@ app.controller("SchedulerController", function ($rootScope, $scope) {
 			time[0] = (parseInt(time[0]) + 12).toString();
 		}
 		console.log(time);
-		console.log($("#" + id).wickedpicker({
-			now: time[0] + ":" + time[2]
-		}));
+		$timeout(function () {
+			console.log($("#" + id).wickedpicker({
+				now: time[0] + ":" + time[2]
+			}));
+		});
 	};
 });

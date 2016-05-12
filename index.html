@@ -107,7 +107,7 @@
 			<tbody>
 				<tr ng-repeat="shift in build.days[currentDay].shifts track by $index">
 					<td>
-						<input type="text" name="shift-{{$index}}-start" id="shift-{{$index}}-start" class="timepicker" ng-init="initTimePicker('shift-{{$index}}-start', shift.start)" ng-model="shift.start">
+						<input type="text" name="shift-{{$index}}-start" id="shift-{{$index}}-start" class="timepicker" ng-init="initTimePicker('shift-'+$index+'-start', shift.start)" ng-model="shift.start">
 						<input type="text" name="shift|{{$index}}|end" class="timepicker" ng-model="shift.end">
 					</td>
 					<td ng-repeat="role in build.days[currentDay].roles.multiSkillRoles">{{shift[role]}}</td>
