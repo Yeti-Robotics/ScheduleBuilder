@@ -497,7 +497,7 @@ app.controller("SchedulerController", function ($rootScope, $scope, $timeout) {
 		var csv = [];
 		var csvData = "";
 
-		csv["competitionName"] = json["schedule"];
+		csv["competitionName"] = json["schedule"] != undefined ? json["schedule"] : "Untitled";
 		csv["teams"] = {};
 		for (var teamName in json["teams"]) {
 			if (json["teams"].hasOwnProperty(teamName)) {
@@ -561,6 +561,7 @@ app.controller("SchedulerController", function ($rootScope, $scope, $timeout) {
 		}
 
 		csvData += dayLines;
+		console.log($rootScope.build.schedule);
 
 		$("#downloadCsv").attr("href", "data:text/csv;charset=utf-8," + encodeURI(csvData));
 		$("#downloadCsv").attr("download", csv["competitionName"].replace(/ /g, "_") + "_Schedule.csv");

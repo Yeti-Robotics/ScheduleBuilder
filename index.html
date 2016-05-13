@@ -94,10 +94,18 @@
 		</div>
 	</div>
 	<div id="schedule" class="hidden sb-panel container-fluid" ng-controller="SchedulerController">
+		<br/>
+		<div class="form-inline">
+			<div class="form-group">
+				<label class="sr-only" for="scheduleName">Schedule Name</label>
+				<input type="text" class="form-control" placeholder="Schedule Name" ng-model="build.schedule" id="scheduleName">
+			</div>
+		</div>
 		<ul class="pagination">
 			<li><a>Current Day:</a></li>
 			<li ng-repeat="day in build.days track by $index" ng-class="{active: $index === currentDay}"><a ng-click="changeDay($index)">{{$index + 1}}</a></li>
 			<li ng-click="build.days.push({})"><a>New One</a></li>
+			<li><a id="downloadCsv" ng-click="generateCsv()" class="btn btn-primary">Download schedule</a></li>
 		</ul>
 		<table class="table table-bordered">
 			<thead class="schedule-roles">
@@ -151,7 +159,6 @@
 				</div>
 			</div>
 		</div>
-		<a id="downloadCsv" ng-click="generateCsv()" class="btn btn-block btn-primary">Download schedule</a>
 	</div>
 	<div id="Intro" ng-controller="InfoPageController">
         <h1>Welcome to schedule builder!</h1>
