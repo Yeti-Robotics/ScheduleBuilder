@@ -168,26 +168,62 @@
 	},
 	"days": [
 		{
+			"roles": {
+				"multiSkillRoles": [
+                    "Pit Lead",
+                    "Pit Programmer"
+                 ],
+				"teamArchetypes": [
+                     "pitPresenterTeam",
+                     "scoutingTeam"
+                 ]
+			},
 			"shifts": [
 				{
-					"start": "12:00",
-					"end": "12:00",
-					"pit": {
-						"pitLead": "Tyler",
-						"programmer": "Sam",
-						"pitPresenters": "pitPresenterTeamA"
-					},
-					"scoutingTeam": "A"
+					"start": "12 : 00 AM",
+					"end": "12 : 00 PM",
+					"Pit Lead": "Tyler",
+					"Pit Programmer": "Sam",
+					"pitPresenters": "pitPresenterTeamA",
+					"scoutingTeam": "scoutingTeamA"
                 },
 				{
-					"start": "12:00",
-					"end": "2:30",
-					"pit": {
-						"pitLead": "Paul",
-						"programmer": "Matthew",
-						"pitPresenters": "pitPresenterTeamB"
-					},
-					"scoutingTeam": "B"
+					"start": "12 : 00 PM",
+					"end": "2 : 30 PM",
+					"Pit Lead": "Paul",
+					"Pit Programmer": "Matthew",
+					"pitPresenters": "pitPresenterTeamB",
+					"scoutingTeam": "scoutingTeamB"
+                }
+            ]
+        },
+		{
+			"roles": {
+				"multiSkillRoles": [
+                    "Pit Lead",
+                    "Pit Programmer"
+                 ],
+				"teamArchetypes": [
+                     "pitPresenterTeam",
+                     "scoutingTeam"
+                 ]
+			},
+			"shifts": [
+				{
+					"start": "12 : 00 AM",
+					"end": "12 : 00 PM",
+					"Pit Lead": "Tyler",
+					"Pit Programmer": "Sam",
+					"pitPresenters": "pitPresenterTeamA",
+					"scoutingTeam": "scoutingTeamA"
+                },
+				{
+					"start": "12 : 00 PM",
+					"end": "2 : 30 PM",
+					"Pit Lead": "Paul",
+					"Pit Programmer": "Matthew",
+					"pitPresenters": "pitPresenterTeamB",
+					"scoutingTeam": "scoutingTeamB"
                 }
             ]
         }
