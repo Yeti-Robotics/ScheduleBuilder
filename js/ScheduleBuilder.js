@@ -410,16 +410,37 @@ app.controller("SchedulerController", function ($rootScope, $scope, $timeout) {
 	};
 
 	$scope.refreshSchedTeamRolesDraggability = function () {
-		$(".sched-draggable-team").droppable({
+		$(".sched-draggable-team-role").droppable({
 			drop: function (event, ui) {
-				console.log('executed line 414');
 				var id = event.target.id.split("|");
-				console.log(id);
-				console.log(ui.draggable[0].id);
-				$rootScope.build.days[$scope.currentDay].shifts[id[0]][id[1]] = ui.draggable[0].id;
+				var index = 0;
+				$rootScope.build.days[$scope.currentDay].shifts.forEach(function (e, i, arr) {
+					if (e.start == id[0]) {
+						index = i;
+					}
+				});
+				$rootScope.build.days[$scope.currentDay].shifts[index][id[1]] = ui.draggable[0].id;
 				$scope.$apply();
 			},
-			//			accept: ".sched-draggable-team",
+			accept: ".sched-draggable-team",
+			addClasses: false
+		});
+	};
+
+	$scope.refreshSchedMultiSkillRolesDroppability = function () {
+		$(".sched-droppable-multi-skill-role").droppable({
+			drop: function (event, ui) {
+				var id = event.target.id.split("|");
+				var index = 0;
+				$rootScope.build.days[$scope.currentDay].shifts.forEach(function (e, i, arr) {
+					if (e.start == id[0]) {
+						index = i;
+					}
+				});
+				$rootScope.build.days[$scope.currentDay].shifts[index][id[1]] = ui.draggable[0].id;
+				$scope.$apply();
+			},
+			accept: ".sched-draggable-person",
 			addClasses: false
 		});
 	};

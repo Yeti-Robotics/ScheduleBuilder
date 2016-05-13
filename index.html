@@ -111,8 +111,8 @@
 						<input type="text" name="shift-{{$index}}-start" id="shift-{{$index}}-start" class="timepicker" ng-init="initTimePicker('shift-'+$index+'-start', shift.start)" ng-model="shift.start">
 						<input type="text" name="shift-{{$index}}-end" id="shift-{{$index}}-end" class="timepicker" ng-init="initTimePicker('shift-'+$index+'-end', shift.end)" ng-model="shift.end">
 					</td>
-					<td ng-repeat="role in build.days[currentDay].roles.multiSkillRoles" class="sched-draggable-multi-skill-role" ng-init="refreshSchedMultiSkillRolesDraggability()">{{shift[role]}}</td>
-					<td ng-repeat="teamArchetype in build.days[currentDay].roles.teamArchetypes" class="sched-draggable-team" ng-init="refreshSchedTeamRolesDraggability()" id="{{$index + '|' + teamArchetype}}">{{shift[teamArchetype]}}</td>
+					<td ng-repeat="role in build.days[currentDay].roles.multiSkillRoles" class="sched-droppable-multi-skill-role" ng-init="refreshSchedMultiSkillRolesDroppability()" id="{{shift.start + '|' + role}}">{{shift[role]}}</td>
+					<td ng-repeat="teamArchetype in build.days[currentDay].roles.teamArchetypes" class="sched-draggable-team-role" ng-init="refreshSchedTeamRolesDraggability()" id="{{shift.start + '|' + teamArchetype}}">{{shift[teamArchetype]}}</td>
 				</tr>
 			</tbody>
 		</table>
