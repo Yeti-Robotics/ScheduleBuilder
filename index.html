@@ -156,12 +156,12 @@
 	<div id="Intro" ng-controller="InfoPageController">
         <h1>Welcome to schedule builder!</h1>
 		<a ng-click="startBuilder(false)" href="" class="pull-right">Create new schedule <span class="glyphicon glyphicon-plus-sign text-success"></span></a>
-		<br/>
-		<div class="list-group">
-			<span class="list-group-item" ng-repeat="schedule in schedules">
-				{{schedule}} <a ng-click="getScheduleData(schedule)" href="" class="pull-right">Edit <span class="glyphicon glyphicon-edit text-info"></span></a>
-			</span>
-		</div>
+ 		<br/>
+ 		<div class="list-group">
+ 			<span class="list-group-item" ng-repeat="schedule in schedules">
+ 				{{schedule}} <a ng-click="getScheduleData(schedule)" href="" class="pull-right">Edit <span class="glyphicon glyphicon-edit text-info"></span></a>
+ 			</span>
+ 		</div>
     </div>
 </body>
 

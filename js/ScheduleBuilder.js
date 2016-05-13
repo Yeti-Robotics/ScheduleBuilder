@@ -1,7 +1,7 @@
 var app;
 app = angular.module('app', []);
 
-app.controller("InfoPageController", function ($rootScope, $scope) {
+app.controller("InfoPageController", function ($rootScope, $scope, $http) {
 	$scope.templateBuild = {
 		people: {
 			"Admin McCoolPants": {
@@ -55,6 +55,24 @@ app.controller("InfoPageController", function ($rootScope, $scope) {
 			}
 		]
 	};
+	
+	$http.get("php/getScheduleNames.php").then(function (response) {
+ 		$scope.schedules = response.data;
+ 	}, function (response) {
+ 		console.log("Error" + response.data);
+ 	});
+ 	
+ 	$scope.getScheduleData = function (scheduleName) {
+ 		$http.get("php/getSchedule.php", {
+ 			params: {
+ 				competition: scheduleName
+ 			}
+ 		}).then(function (response) {
+ 			$scope.startBuilder(response.data);
+ 		}, function (response) {
+ 			console.log("Error: " + response.data);
+ 		});
+ 	};
 
 	$scope.startBuilder = function (build) {
 		if (build) {
@@ -299,7 +317,7 @@ app.controller("ScheduleBuilderController", function ($rootScope, $scope) {
 	$scope.bringForward = function (sbpanel) {
 		switch (sbpanel) {
 		case 'schedule-loader':
-			$(".panel").addClass("hidden");
+			$(".sb-panel").addClass("hidden");
 			$(".tab").removeClass("active");
 			$("#Intro").removeClass("hidden");
 			$("#Builder").addClass("hidden");
