@@ -515,6 +515,9 @@ app.controller("SchedulerController", function ($rootScope, $scope, $timeout) {
 
 				csv["days"][i]["shifts"][j]["start"] = start[0] + ":" + start[2] + " " + start[3];
 				csv["days"][i]["shifts"][j]["end"] = end[0] + ":" + end[2] + " " + end[3];
+				
+				csv["days"][i]["shifts"][j]["start"] = start.join(" ");
+				csv["days"][i]["shifts"][j]["end"] = end.join(" ");
 			}
 		}
 
