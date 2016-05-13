@@ -1,7 +1,7 @@
 var app;
 app = angular.module('app', []);
 
-app.controller("InfoPageController", function ($rootScope, $scope) {
+app.controller("InfoPageController", function ($rootScope, $scope, $http) {
     $scope.templateBuild = {
         people: {
             "Admin McCoolPants": {
@@ -39,6 +39,24 @@ app.controller("InfoPageController", function ($rootScope, $scope) {
             }
         }
     };
+	
+	$http.get("php/getScheduleNames.php").then(function (response) {
+		$scope.schedules = response.data;
+	}, function (response) {
+		console.log("Error" + response.data);
+	});
+	
+	$scope.getScheduleData = function (scheduleName) {
+		$http.get("php/getSchedule.php", {
+			params: {
+				competition: scheduleName
+			}
+		}).then(function (response) {
+			$scope.startBuilder(response.data);
+		}, function (response) {
+			console.log("Error: " + response.data);
+		});
+	};
 
     $scope.startBuilder = function (build) {
         if (build) {
@@ -240,7 +258,7 @@ app.controller("ScheduleBuilderController", function ($rootScope, $scope) {
         });
     };
 
-    $scope.refreshTeamMemberDraggability = function () {
+    $scope.refreshTeamMemberDraggability = function (role) {
         $(".draggable-team-member").droppable({
             drop: function (event, ui) {
                 var memberName = ui.draggable[0].id;
@@ -250,7 +268,29 @@ app.controller("ScheduleBuilderController", function ($rootScope, $scope) {
                 $rootScope.build.teams[role[0]].members[role[1]] = memberName;
                 $scope.$apply();
             },
-            accept: ".draggable-person",
+            accept: function (dropped) {
+				var children = $(dropped).children();
+				var skills = {};
+				for (var i = 0; i < children.length; i++) {
+					if ($rootScope.build.skills.hasOwnProperty($(children[i]).attr("id"))) {
+						skills[$(children[i]).attr("id")] = $rootScope.build.skills[$(children[i]).attr("id")];
+					}
+				}
+				var requiredSkills = {};
+				for (var i = 0; i < role.requires.length; i++) {
+					if ($rootScope.build.skills.hasOwnProperty(role.requires[i])) {
+						requiredSkills[role.requires[i]] = $rootScope.build.skills[role.requires[i]];
+					}
+				}
+				
+				for (var requiredSkill in requiredSkills) {
+					if (!skills.hasOwnProperty("" + requiredSkill)) {
+						return false;
+					}
+				}
+				
+				return true;
+			},
             addClasses: false,
             activeClass: "droppable"
         });
@@ -258,50 +298,56 @@ app.controller("ScheduleBuilderController", function ($rootScope, $scope) {
 
     $scope.bringForward = function (panel) {
         switch (panel) {
-        case 'people':
-            $(".panel").addClass("hidden");
-            $(".tab").removeClass("active");
-            $("#people").removeClass("hidden");
-            $("#people-tab").addClass("active");
-            $("#skills").removeClass("hidden");
-            $("#skills-tab").addClass("active");
-            break;
-        case 'skills':
-            $(".panel").addClass("hidden");
-            $(".tab").removeClass("active");
-            $("#skills").removeClass("hidden");
-            $("#skills-tab").addClass("active");
-            break;
-        case 'multi-skill-roles':
-            $(".panel").addClass("hidden");
-            $(".tab").removeClass("active");
-            $("#multi-skill-roles").removeClass("hidden");
-            $("#multi-skill-roles-tab").addClass("active");
-            $("#skills").removeClass("hidden");
-            $("#skills-tab").addClass("active");
-            break;
-        case 'team-archetypes':
-            $(".panel").addClass("hidden");
-            $(".tab").removeClass("active");
-            $("#team-archetypes").removeClass("hidden");
-            $("#team-archetypes-tab").addClass("active");
-            $("#skills").removeClass("hidden");
-            $("#skills-tab").addClass("active");
-            break;
-        case 'teams':
-            $(".panel").addClass("hidden");
-            $(".tab").removeClass("active");
-            $("#teams").removeClass("hidden");
-            $("#teams-tab").addClass("active");
-            $("#people").removeClass("hidden");
-            $("#people-tab").addClass("active");
-            break;
-        case 'schedule':
-            $(".panel").addClass("hidden");
-            $(".tab").removeClass("active");
-            $("#schedule").removeClass("hidden");
-            $("#schedule-tab").addClass("active");
-            break;
+			case 'schedules':
+				$(".panel").addClass("hidden");
+				$(".tab").removeClass("active");
+				$("#Intro").removeClass("hidden");
+        		$("#Builder").addClass("hidden");
+				break;
+			case 'people':
+				$(".panel").addClass("hidden");
+				$(".tab").removeClass("active");
+				$("#people").removeClass("hidden");
+				$("#people-tab").addClass("active");
+				$("#skills").removeClass("hidden");
+				$("#skills-tab").addClass("active");
+				break;
+			case 'skills':
+				$(".panel").addClass("hidden");
+				$(".tab").removeClass("active");
+				$("#skills").removeClass("hidden");
+				$("#skills-tab").addClass("active");
+				break;
+			case 'multi-skill-roles':
+				$(".panel").addClass("hidden");
+				$(".tab").removeClass("active");
+				$("#multi-skill-roles").removeClass("hidden");
+				$("#multi-skill-roles-tab").addClass("active");
+				$("#skills").removeClass("hidden");
+				$("#skills-tab").addClass("active");
+				break;
+			case 'team-archetypes':
+				$(".panel").addClass("hidden");
+				$(".tab").removeClass("active");
+				$("#team-archetypes").removeClass("hidden");
+				$("#team-archetypes-tab").addClass("active");
+				$("#skills").removeClass("hidden");
+				$("#skills-tab").addClass("active");
+				break;
+			case 'teams':
+				$(".panel").addClass("hidden");
+				$(".tab").removeClass("active");
+				$("#teams").removeClass("hidden");
+				$("#teams-tab").addClass("active");
+				$("#people").removeClass("hidden");
+				$("#people-tab").addClass("active");
+				break;
+			case 'schedule-builder':
+				$(".panel").addClass("hidden");
+				$(".tab").removeClass("active");
+				$("#schedule-builder").removeClass("hidden");
+				$("#schedule-builder-tab").addClass("active");
+				break;
         }
     };
 });
