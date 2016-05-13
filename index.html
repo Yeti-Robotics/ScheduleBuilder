@@ -17,15 +17,15 @@
 
 <body>
 	<div id="Builder" ng-controller="ScheduleBuilderController" class="hidden">
-        <ul class="nav nav-pills">
-            <li id="schedule-loader-tab" class="tab"><a ng-click="bringForward('schedule-loader')">Schedules</a></li>
-            <li id="people-tab" class="tab"><a ng-click="bringForward('people')">People</a></li>
-            <li id="skills-tab" class="tab"><a ng-click="bringForward('skills')">Skills</a></li>
+		<ul class="nav nav-pills">
+			<li id="schedule-loader-tab" class="tab"><a ng-click="bringForward('schedule-loader')">Schedules</a></li>
+			<li id="people-tab" class="tab"><a ng-click="bringForward('people')">People</a></li>
+			<li id="skills-tab" class="tab"><a ng-click="bringForward('skills')">Skills</a></li>
 			<li id="multi-skill-roles-tab" class="tab"><a ng-click="bringForward('multi-skill-roles')">Multi Skill Roles</a></li>
 			<li id="team-archetypes-tab" class="tab"><a ng-click="bringForward('team-archetypes')">Team Archetypes</a></li>
 			<li id="teams-tab" class="tab"><a ng-click="bringForward('teams')">Teams</a></li>
 			<li id="schedule-tab" class="tab"><a ng-click="bringForward('schedule')">Schedule Builder</a></li>
-        </ul>
+		</ul>
 		<div id="people" class="well hidden sb-panel">
 			<div ng-repeat="(name, person) in build.people" class="sb-panel-item draggable-person well well-sm" ng-init="refreshPeopleDraggability()" id="{{name}}"><span class="large">{{name}}</span>
 				<button type="button" ng-click="removeRoot('Person', name)" class="btn badge"><span class="glyphicon glyphicon-remove"></span></button>
@@ -104,24 +104,30 @@
 		<ul class="pagination">
 			<li><a>Current Day:</a></li>
 			<li ng-repeat="day in build.days track by $index" ng-class="{active: $index === currentDay}"><a ng-click="changeDay($index)">{{$index + 1}}</a></li>
-			<li ng-click="build.days.push({})"><a>New One</a></li>
-			<li><a id="downloadCsv" ng-click="generateCsv()" class="btn btn-primary">Download schedule</a></li>
+			<li ng-click="build.days.push({roles: {multiSkillRoles: [], teamArchetypes: []}, shifts: []})"><a>New One</a></li>
 		</ul>
 		<table class="table table-bordered">
 			<thead class="schedule-roles">
 				<th>Time Slots</th>
-				<th ng-repeat="role in build.days[currentDay].roles.multiSkillRoles">{{role}}</th>
-				<th ng-repeat="teamArchetype in build.days[currentDay].roles.teamArchetypes">{{teamArchetype}}</th>
+				<th ng-repeat="role in build.days[currentDay].roles.multiSkillRoles">
+					<button type="button" ng-click="removeRole(role)" class="btn badge"><span class="glyphicon glyphicon-remove"></span></button>{{role}}</th>
+				<th ng-repeat="teamArchetype in build.days[currentDay].roles.teamArchetypes"><button type="button" ng-click="removeTeamArchetype(teamArchetype)" class="btn badge"><span class="glyphicon glyphicon-remove"></span></button>{{teamArchetype}}</th>
 				<th class="sched-draggable-role">Drag Role Here to add</th>
 			</thead>
 			<tbody>
 				<tr ng-repeat="shift in build.days[currentDay].shifts track by $index">
 					<td>
+						<button type="button" ng-click="removeShift($index)" class="btn badge"><span class="glyphicon glyphicon-remove"></span></button>
 						<input type="text" name="shift-{{$index}}-start" id="shift-{{$index}}-start" class="timepicker" ng-init="initTimePicker('shift-'+$index+'-start', shift.start)" ng-model="shift.start">
 						<input type="text" name="shift-{{$index}}-end" id="shift-{{$index}}-end" class="timepicker" ng-init="initTimePicker('shift-'+$index+'-end', shift.end)" ng-model="shift.end">
 					</td>
 					<td ng-repeat="role in build.days[currentDay].roles.multiSkillRoles" class="sched-droppable-multi-skill-role" ng-init="refreshSchedMultiSkillRolesDroppability()" id="{{shift.start + '|' + role}}">{{shift[role]}}</td>
 					<td ng-repeat="teamArchetype in build.days[currentDay].roles.teamArchetypes" class="sched-draggable-team-role" ng-init="refreshSchedTeamRolesDraggability()" id="{{shift.start + '|' + teamArchetype}}">{{shift[teamArchetype]}}</td>
+				</tr>
+				<tr>
+					<td>
+						<button ng-click="addShift()" class="btn">Add Shift</button>
+					</td>
 				</tr>
 			</tbody>
 		</table>
@@ -161,15 +167,15 @@
 		</div>
 	</div>
 	<div id="Intro" ng-controller="InfoPageController">
-        <h1>Welcome to schedule builder!</h1>
+		<h1>Welcome to schedule builder!</h1>
 		<a ng-click="startBuilder(false)" href="" class="pull-right">Create new schedule <span class="glyphicon glyphicon-plus-sign text-success"></span></a>
- 		<br/>
- 		<div class="list-group">
- 			<span class="list-group-item" ng-repeat="schedule in schedules">
+		<br/>
+		<div class="list-group">
+			<span class="list-group-item" ng-repeat="schedule in schedules">
  				{{schedule}} <a ng-click="getScheduleData(schedule)" href="" class="pull-right">Edit <span class="glyphicon glyphicon-edit text-info"></span></a>
- 			</span>
- 		</div>
-    </div>
+			</span>
+		</div>
+	</div>
 </body>
 
 </html>

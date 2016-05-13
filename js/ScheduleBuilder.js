@@ -55,24 +55,24 @@ app.controller("InfoPageController", function ($rootScope, $scope, $http) {
 			}
 		]
 	};
-	
+
 	$http.get("php/getScheduleNames.php").then(function (response) {
- 		$scope.schedules = response.data;
- 	}, function (response) {
- 		console.log("Error" + response.data);
- 	});
- 	
- 	$scope.getScheduleData = function (scheduleName) {
- 		$http.get("php/getSchedule.php", {
- 			params: {
- 				competition: scheduleName
- 			}
- 		}).then(function (response) {
- 			$scope.startBuilder(response.data);
- 		}, function (response) {
- 			console.log("Error: " + response.data);
- 		});
- 	};
+		$scope.schedules = response.data;
+	}, function (response) {
+		console.log("Error" + response.data);
+	});
+
+	$scope.getScheduleData = function (scheduleName) {
+		$http.get("php/getSchedule.php", {
+			params: {
+				competition: scheduleName
+			}
+		}).then(function (response) {
+			$scope.startBuilder(response.data);
+		}, function (response) {
+			console.log("Error: " + response.data);
+		});
+	};
 
 	$scope.startBuilder = function (build) {
 		if (build) {
@@ -293,20 +293,19 @@ app.controller("ScheduleBuilderController", function ($rootScope, $scope) {
 						skills[$(children[i]).attr("id")] = $rootScope.build.skills[$(children[i]).attr("id")];
 					}
 				}
-				console.log(skills);
 				var requiredSkills = {};
 				for (var i = 0; i < role.requires.length; i++) {
 					if ($rootScope.build.skills.hasOwnProperty(role.requires[i])) {
 						requiredSkills[role.requires[i]] = $rootScope.build.skills[role.requires[i]];
 					}
 				}
-				
+
 				for (var requiredSkill in requiredSkills) {
 					if (requiredSkills[requiredSkill] != skills[requiredSkill]) {
 						return false;
 					}
 				}
-				
+
 				return true;
 			},
 			addClasses: false,
@@ -322,7 +321,7 @@ app.controller("ScheduleBuilderController", function ($rootScope, $scope) {
 			$("#Intro").removeClass("hidden");
 			$("#Builder").addClass("hidden");
 			break;
-			case 'people':
+		case 'people':
 			$(".sb-panel").addClass("hidden");
 			$(".tab").removeClass("active");
 			$("#people").removeClass("hidden");
@@ -371,6 +370,7 @@ app.controller("ScheduleBuilderController", function ($rootScope, $scope) {
 });
 
 app.controller("SchedulerController", function ($rootScope, $scope, $timeout) {
+
 	$scope.currentDay = 0;
 
 	$scope.isMultiSkillRole = function (elm) {
@@ -492,6 +492,34 @@ app.controller("SchedulerController", function ($rootScope, $scope, $timeout) {
 		});
 	};
 
+	$scope.addShift = function () {
+		var startTime, endTime;
+		if ($rootScope.build.days[$scope.currentDay].shifts.length > 0) {
+			startTime = $rootScope.build.days[$scope.currentDay].shifts[$rootScope.build.days[$scope.currentDay].shifts.length - 1].end;
+			var startTimeArr = startTime.split(" ");
+			endTime = (parseInt(startTimeArr[0]) + 1).toString() + " : " + startTimeArr[2] + " " + startTimeArr[3];
+		} else {
+			startTime = "8 : 00 AM";
+			endTime = "9 : 00 AM";
+		}
+		$rootScope.build.days[$scope.currentDay].shifts.push({
+			start: startTime,
+			end: endTime
+		});
+	};
+
+	$scope.removeRole = function (role) {
+		$rootScope.build.days[$scope.currentDay].roles.multiSkillRoles.splice($rootScope.build.days[$scope.currentDay].roles.multiSkillRoles.indexOf(role), 1);
+	};
+
+	$scope.removeTeamArchetype = function (teamArchetype) {
+		$rootScope.build.days[$scope.currentDay].roles.teamArchetypes.splice($rootScope.build.days[$scope.currentDay].roles.teamArchetypes.indexOf(teamArchetype), 1);
+	};
+
+	$scope.removeShift = function (shift) {
+		$rootScope.build.days[$scope.currentDay].shifts.splice(shift, 1);
+	};
+
 	$scope.generateCsv = function () {
 		var json = $rootScope.build;
 		var csv = [];
@@ -561,7 +589,6 @@ app.controller("SchedulerController", function ($rootScope, $scope, $timeout) {
 		}
 
 		csvData += dayLines;
-		console.log($rootScope.build.schedule);
 
 		$("#downloadCsv").attr("href", "data:text/csv;charset=utf-8," + encodeURI(csvData));
 		$("#downloadCsv").attr("download", csv["competitionName"].replace(/ /g, "_") + "_Schedule.csv");
