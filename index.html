@@ -103,18 +103,53 @@
 				<th>Time Slots</th>
 				<th ng-repeat="role in build.days[currentDay].roles.multiSkillRoles">{{role}}</th>
 				<th ng-repeat="teamArchetype in build.days[currentDay].roles.teamArchetypes">{{teamArchetype}}</th>
+				<th class="sched-draggable-role">Drag Role Here to add</th>
 			</thead>
 			<tbody>
 				<tr ng-repeat="shift in build.days[currentDay].shifts track by $index">
 					<td>
 						<input type="text" name="shift-{{$index}}-start" id="shift-{{$index}}-start" class="timepicker" ng-init="initTimePicker('shift-'+$index+'-start', shift.start)" ng-model="shift.start">
-						<input type="text" name="shift|{{$index}}|end" class="timepicker" ng-model="shift.end">
+						<input type="text" name="shift-{{$index}}-end" id="shift-{{$index}}-end" class="timepicker" ng-init="initTimePicker('shift-'+$index+'-end', shift.end)" ng-model="shift.end">
 					</td>
-					<td ng-repeat="role in build.days[currentDay].roles.multiSkillRoles">{{shift[role]}}</td>
-					<td ng-repeat="teamArchetype in build.days[currentDay].roles.teamArchetypes">{{shift[teamArchetype]}}</td>
+					<td ng-repeat="role in build.days[currentDay].roles.multiSkillRoles" class="sched-draggable-multi-skill-role" ng-init="refreshSchedMultiSkillRolesDraggability()">{{shift[role]}}</td>
+					<td ng-repeat="teamArchetype in build.days[currentDay].roles.teamArchetypes" class="sched-draggable-team" ng-init="refreshSchedTeamRolesDraggability()" id="{{$index + '|' + teamArchetype}}">{{shift[teamArchetype]}}</td>
 				</tr>
 			</tbody>
 		</table>
+		<div class="row">
+			<div class="col-sm-3 well">
+				Roles
+				<div class="well well-sm sb-panel-item sched-draggable-multi-skill-role" ng-repeat="(name, multiSkillRole) in build.multiSkillRoles" ng-init="refreshSchedMultiSkillRolesDraggability()" id="{{name}}">
+					{{name}}
+					<div class="sb-panel-item list-group-item" ng-repeat="skill in multiSkillRole.requires">{{build.skills[skill]}}
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-3 well">
+				People
+				<div ng-repeat="(name, person) in build.people" class="sb-panel-item sched-draggable-person well well-sm" ng-init="refreshSchedPeopleDraggability()" id="{{name}}"><span class="large">{{name}}</span>
+					<div class="skill list-group-item sb-panel-item" ng-repeat="skill in person.skills">{{build.skills[skill]}}
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-3 well">
+				Team Archetypes
+				<div class="well well-sm sb-panel-item sched-draggable-team-archetype" ng-repeat="(name, teamArchetype) in build.teamArchetypes" ng-init="refreshSchedTeamArchetypesDraggability()" id="{{name}}">{{name}}
+					<div class="sb-panel-item team-role" ng-repeat="(roleName, role) in teamArchetype.roles" id="{{name + '|' + roleName}}">{{roleName}}
+						<div class="skill sb-panel-item list-group-item" ng-repeat="skill in role.requires">{{build.skills[skill]}}
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-3 well">
+				Teams
+				<div class="well well-sm sb-panel-item sched-draggable-team" ng-repeat="(name, team) in build.teams" ng-init="refreshSchedTeamDraggability()" id="{{name}}">{{name}} (archetype: {{team.archetype}})
+					<div class="sb-panel-item team-role" ng-repeat="(roleName, role) in build.teamArchetypes[team.archetype].roles" id="{{name + '|' + roleName}}">{{roleName}}
+						<div class="person inline">{{team.members[roleName]}}</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 	<div id="Intro" ng-controller="InfoPageController">
 		<h1>Welcome to schedule builder!</h1>

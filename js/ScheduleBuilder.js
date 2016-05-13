@@ -325,22 +325,103 @@ app.controller("ScheduleBuilderController", function ($rootScope, $scope) {
 
 app.controller("SchedulerController", function ($rootScope, $scope, $timeout) {
 	$scope.currentDay = 0;
+
+	$scope.isMultiSkillRole = function (elm) {
+		var classList = elm.attr("class").split(" ");
+		for (var i = 0; i < classList.length; i++) {
+			if (classList[i] === "sched-draggable-multi-skill-role") {
+				return true;
+			}
+		}
+		return false;
+	};
+
+	$scope.isTeamArchetype = function (elm) {
+		var classList = elm.attr("class").split(" ");
+		for (var i = 0; i < classList.length; i++) {
+			if (classList[i] === "sched-draggable-team-archetype") {
+				return true;
+			}
+		}
+		return false;
+	};
+
+	$(".sched-draggable-role").droppable({
+		drop: function (event, ui) {
+			if ($scope.isMultiSkillRole(ui.draggable)) {
+				$rootScope.build.days[$scope.currentDay].roles.multiSkillRoles.push(ui.draggable[0].id);
+			} else if ($scope.isTeamArchetype(ui.draggable)) {
+				$rootScope.build.days[$scope.currentDay].roles.teamArchetypes.push(ui.draggable[0].id);
+			}
+			$scope.$apply();
+		},
+		accept: function (ui) {
+			return ($scope.isMultiSkillRole(ui) || $scope.isTeamArchetype(ui));
+		},
+		addClasses: false
+	});
+
 	$scope.changeDay = function (index) {
 		$scope.currentDay = index;
 	};
 
 	$scope.initTimePicker = function (id, start) {
 		var time = start.split(" ");
-		console.log(id);
-		console.log(start);
 		if (time[3] === "PM" && time[0] !== "12") {
 			time[0] = (parseInt(time[0]) + 12).toString();
 		}
-		console.log(time);
 		$timeout(function () {
-			console.log($("#" + id).wickedpicker({
+			$("#" + id).wickedpicker({
 				now: time[0] + ":" + time[2]
-			}));
+			});
 		});
 	};
+
+	$scope.refreshSchedPeopleDraggability = function () {
+		$timeout(function () {
+			$(".sched-draggable-person").draggable({
+				helper: "clone"
+			});
+		});
+	};
+
+	$scope.refreshSchedMultiSkillRolesDraggability = function () {
+		$timeout(function () {
+			$(".sched-draggable-multi-skill-role").draggable({
+				helper: "clone"
+			});
+		});
+	};
+
+	$scope.refreshSchedTeamArchetypesDraggability = function () {
+		$timeout(function () {
+			$(".sched-draggable-team-archetype").draggable({
+				helper: "clone"
+			});
+		});
+	};
+
+	$scope.refreshSchedTeamDraggability = function () {
+		$timeout(function () {
+			$(".sched-draggable-team").draggable({
+				helper: "clone"
+			});
+		});
+	};
+
+	$scope.refreshSchedTeamRolesDraggability = function () {
+		$(".sched-draggable-team").droppable({
+			drop: function (event, ui) {
+				console.log('executed line 414');
+				var id = event.target.id.split("|");
+				console.log(id);
+				console.log(ui.draggable[0].id);
+				$rootScope.build.days[$scope.currentDay].shifts[id[0]][id[1]] = ui.draggable[0].id;
+				$scope.$apply();
+			},
+			//			accept: ".sched-draggable-team",
+			addClasses: false
+		});
+	};
+
 });
