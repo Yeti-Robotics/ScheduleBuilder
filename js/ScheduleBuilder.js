@@ -445,4 +445,77 @@ app.controller("SchedulerController", function ($rootScope, $scope, $timeout) {
 		});
 	};
 
+	$scope.generateCsv = function () {
+		var json = $rootScope.build;
+		var csv = [];
+		var csvData = "";
+
+		csv["competitionName"] = json["schedule"];
+		csv["teams"] = {};
+		for (var teamName in json["teams"]) {
+			if (json["teams"].hasOwnProperty(teamName)) {
+				csv["teams"][teamName] = json["teams"][teamName]["members"];
+			}
+		}
+		csv["days"] = [];
+		for (var i = 0; i < json["days"].length; i++) {
+			csv["days"].push(json["days"][i]);
+		}
+		for (i = 0; i < csv["days"].length; i++) {
+			for (j = 0; j < csv["days"][i]["shifts"].length; j++) {
+				var start = csv["days"][i]["shifts"][j]["start"].split(" ");
+				var end = csv["days"][i]["shifts"][j]["end"].split(" ");
+
+				csv["days"][i]["shifts"][j]["start"] = start[0] + ":" + start[2] + " " + start[3];
+				csv["days"][i]["shifts"][j]["end"] = end[0] + ":" + end[2] + " " + end[3];
+			}
+		}
+
+		var csvData = csv["competitionName"] + " Schedule,\n,\n";
+		var teamLines = "";
+		for (var teamName in csv["teams"]) {
+			var roleLines = "";
+			for (var roleName in csv["teams"][teamName]) {
+				if (csv["teams"][teamName].hasOwnProperty(roleName)) {
+					roleLines += "," + roleName + ": " + csv["teams"][teamName][roleName] + "\n";
+				}
+			}
+			teamLines += teamName + roleLines;
+		}
+		teamLines = teamLines.trim();
+
+		csvData += teamLines + "\n,\n,\n";
+
+		var dayLines = "";
+		for (i = 0; i < csv["days"].length; i++) {
+			var shiftLines = "";
+			var roleNames = [];
+			var roleNames = csv["days"][i]["roles"]["multiSkillRoles"];
+
+			for (var shift in csv["days"][i]["shifts"]) {
+				var roleLines = "";
+				for (var positionName in csv["days"][i]["shifts"][shift]) {
+					if (csv["days"][i]["shifts"][shift].hasOwnProperty(positionName)) {
+						if (positionName != "start" && positionName != "end") {
+							for (k = 0; k < roleNames.length; k++) {
+								if (positionName == roleNames[k]) {
+									roleLines += "," + positionName + ": " + csv["days"][i]["shifts"][shift][positionName] + "\n";
+									k = roleNames.length;
+								} else if (k == (roleNames.length - 1)) {
+									roleLines += "," + csv["days"][i]["shifts"][shift][positionName] + "\n";
+								}
+							}
+						}
+					}
+				}
+				shiftLines += csv["days"][i]["shifts"][shift]["start"] + "-" + csv["days"][i]["shifts"][shift]["end"] + roleLines;
+			}
+			dayLines += "Day " + (i + 1) + ",\n" + shiftLines + ",\n";
+		}
+
+		csvData += dayLines;
+
+		$("#downloadCsv").attr("href", "data:text/csv;charset=utf-8," + encodeURI(csvData));
+		$("#downloadCsv").attr("download", csv["competitionName"].replace(/ /g, "_") + "_Schedule.csv");
+	};
 });
