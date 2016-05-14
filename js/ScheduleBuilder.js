@@ -482,7 +482,15 @@ app.controller("SchedulerController", function ($rootScope, $scope, $timeout) {
 				$rootScope.build.days[$scope.currentDay].shifts[index][id[1]] = ui.draggable[0].id;
 				$scope.$apply();
 			},
-			accept: ".sched-draggable-team",
+			accept: function (droppable) {
+				if (!$($(droppable)[0]).hasClass("sched-draggable-team")) {
+					return false;
+				} else if (this.id.split("|")[1] === $rootScope.build.teams[droppable[0].id].archetype) {
+					return true;
+				} else {
+					return false;
+				}
+			},
 			addClasses: false,
 			tolerance: "pointer"
 		});
@@ -498,10 +506,23 @@ app.controller("SchedulerController", function ($rootScope, $scope, $timeout) {
 						index = i;
 					}
 				});
+
+
 				$rootScope.build.days[$scope.currentDay].shifts[index][id[1]] = ui.draggable[0].id;
 				$scope.$apply();
 			},
-			accept: ".sched-draggable-person",
+			accept: function (droppable) {
+				if (!$($(droppable)[0]).hasClass("sched-draggable-person")) {
+					return false;
+				}
+				var id = droppable[0].id;
+				var learnedSkills = $rootScope.build.people[id].skills;
+				var multiSkillRole = this.id.split("|")[1];
+				var requiredSkills = $rootScope.build.multiSkillRoles[multiSkillRole].requires;
+				return requiredSkills.every(function (requiredSkill) {
+					return !(learnedSkills.indexOf(requiredSkill) == -1);
+				});
+			},
 			addClasses: false,
 			tolerance: "pointer"
 		});
@@ -525,6 +546,9 @@ app.controller("SchedulerController", function ($rootScope, $scope, $timeout) {
 
 	$scope.removeRole = function (role) {
 		$rootScope.build.days[$scope.currentDay].roles.multiSkillRoles.splice($rootScope.build.days[$scope.currentDay].roles.multiSkillRoles.indexOf(role), 1);
+		$rootScope.build.days[$scope.currentDay].shifts.forEach(function (e, i, arr) {
+			delete $rootScope.build.days[$scope.currentDay].shifts[i][role];
+		});
 	};
 
 	$scope.removeTeamArchetype = function (teamArchetype) {
