@@ -94,113 +94,136 @@ app.controller("ScheduleBuilderController", function ($rootScope, $scope) {
 		teamArchetype: "",
 		team: ""
 	};
+	
+	var hasProperty = function (object, property) {
+		for (var prop in object) {
+			if (object.hasOwnProperty(prop)) {
+				if (prop.toLowerCase().trim() == property.toLowerCase().trim()) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 
 	$scope.add = function (addMode) {
 		switch (addMode) {
-		case "Person":
-			$rootScope.build.people[$scope.new.person] = {
-				skills: []
-			};
-			$scope.new.person = "";
-			break;
-		case "Skill":
-			$rootScope.build.skills[Object.getOwnPropertyNames($rootScope.build.skills).length] = $scope.new.skill;
-			$scope.new.skill = "";
-			break;
-		case "MultiSkillRole":
-			$rootScope.build.multiSkillRoles[$scope.new.multiSkillRole] = {
-				requires: []
-			};
-			$scope.new.multiSkillRole = "";
-			break;
-		case "teamArchetype":
-			$rootScope.build.teamArchetypes[$scope.new.teamArchetype] = {
-				roles: {}
-			};
-			$scope.new.teamArchetype = "";
-			break;
-		case "Team":
-			$rootScope.build.teams[$scope.new.team] = {
-				archetype: "",
-				members: {}
-			};
-			$scope.new.team = "";
-			break;
+			case "Person":
+				if (!hasProperty($rootScope.build.people, $scope.new.person)) {
+					$rootScope.build.people[$scope.new.person] = {
+						skills: []
+					};
+					$scope.new.person = "";
+				}
+				break;
+			case "Skill":
+				if (!hasProperty($rootScope.build.skills, $scope.new.skill)) {
+					$rootScope.build.skills[Object.getOwnPropertyNames($rootScope.build.skills).length] = $scope.new.skill;
+					$scope.new.skill = "";
+				}
+				break;
+			case "MultiSkillRole":
+				if (!hasProperty($rootScope.build.multiSkillRoles, $scope.new.multiSkillRole)) {
+					$rootScope.build.multiSkillRoles[$scope.new.multiSkillRole] = {
+						requires: []
+					};
+					$scope.new.multiSkillRole = "";
+				}
+				break;
+			case "teamArchetype":
+				if (!hasProperty($rootScope.build.teamArchetypes, $scope.new.teamArchetype)) {
+					$rootScope.build.teamArchetypes[$scope.new.teamArchetype] = {
+						roles: {}
+					};
+					$scope.new.teamArchetype = "";
+				}
+				break;
+			case "Team":
+				if (!hasProperty($rootScope.build.teams, $scope.new.team)) {
+					$rootScope.build.teams[$scope.new.team] = {
+						archetype: "",
+						members: {}
+					};
+					$scope.new.team = "";
+				}
+				break;
 		}
 	};
-
+	
 	$scope.removeStem = function (removeType, item, array) {
 		switch (removeType) {
-		case "Person":
-			break;
-		case "Skill":
-			array.splice(array.indexOf(item), 1);
-			break;
-		case "MultiSkillRole":
-			break;
-		case "teamArchetype":
-			break;
-		case "Team":
-			break;
+			case "Person":
+				break;
+			case "Skill":
+				array.splice(array.indexOf(item), 1);
+				break;
+			case "MultiSkillRole":
+				break;
+			case "teamArchetype":
+				break;
+			case "Team":
+				break;
 		}
 	};
 
 	$scope.removeRoot = function (removeType, item, archetypeRole) {
 		switch (removeType) {
-		case "Person":
-			delete $rootScope.build.people[item];
-			break;
-		case "Skill":
-			var skillIndex;
-			for (var skillId in $rootScope.build.skills) {
-				if ($rootScope.build.skills[skillId] == item) {
-					skillIndex = parseInt(skillId);
+			case "Person":
+				delete $rootScope.build.people[item];
+				break;
+			case "Skill":
+				var skillIndex;
+				for (var skillId in $rootScope.build.skills) {
+					if ($rootScope.build.skills[skillId] == item) {
+						skillIndex = parseInt(skillId);
+					}
 				}
-			}
-			delete $rootScope.build.skills[skillIndex];
-			for (var name in $rootScope.build.people) {
-				if ($rootScope.build.people.hasOwnProperty(name)) {
-					var obj = $rootScope.build.people[name];
-					obj.skills.splice(obj.skills.indexOf(skillIndex), 1);
+				delete $rootScope.build.skills[skillIndex];
+				for (var name in $rootScope.build.people) {
+					if ($rootScope.build.people.hasOwnProperty(name)) {
+						var obj = $rootScope.build.people[name];
+						obj.skills.splice(obj.skills.indexOf(skillIndex), 1);
+					}
 				}
-			}
-			for (var name in $rootScope.build.multiSkillRoles) {
-				if ($rootScope.build.multiSkillRoles.hasOwnProperty(name)) {
-					var obj = $rootScope.build.multiSkillRoles[name];
-					obj.requires.splice(obj.requires.indexOf(skillIndex), 1);
+				for (var name in $rootScope.build.multiSkillRoles) {
+					if ($rootScope.build.multiSkillRoles.hasOwnProperty(name)) {
+						var obj = $rootScope.build.multiSkillRoles[name];
+						obj.requires.splice(obj.requires.indexOf(skillIndex), 1);
+					}
 				}
-			}
-			for (var name in $rootScope.build.teamArchetypes) {
-				if ($rootScope.build.teamArchetypes.hasOwnProperty(name)) {
-					var obj = $rootScope.build.teamArchetypes[name];
-					for (var role in obj.roles) {
-						if (obj.roles.hasOwnProperty(role)) {
-							obj.roles[role].requires.splice(obj.roles[role].requires.indexOf(skillIndex), 1);
+				for (var name in $rootScope.build.teamArchetypes) {
+					if ($rootScope.build.teamArchetypes.hasOwnProperty(name)) {
+						var obj = $rootScope.build.teamArchetypes[name];
+						for (var role in obj.roles) {
+							if (obj.roles.hasOwnProperty(role)) {
+								obj.roles[role].requires.splice(obj.roles[role].requires.indexOf(skillIndex), 1);
+							}
 						}
 					}
 				}
-			}
-			break;
-		case "MultiSkillRole":
-			delete $rootScope.build.multiSkillRoles[item];
-			break;
-		case "teamArchetype":
-			delete $rootScope.build.teamArchetypes[item];
-			break;
-		case "archetypeRole":
-			delete $rootScope.build.teamArchetypes[item].roles[archetypeRole];
-			break;
-		case "Team":
-			delete $rootScope.build.teams[item];
-			break;
+				break;
+			case "MultiSkillRole":
+				delete $rootScope.build.multiSkillRoles[item];
+				break;
+			case "teamArchetype":
+				delete $rootScope.build.teamArchetypes[item];
+				break;
+			case "archetypeRole":
+				delete $rootScope.build.teamArchetypes[item].roles[archetypeRole];
+				break;
+			case "Team":
+				delete $rootScope.build.teams[item];
+				break;
 		}
 	}
 
 	$scope.addArchetypeRole = function (archetype) {
-		$rootScope.build.teamArchetypes[archetype].roles[$rootScope.build.teamArchetypes[archetype].newrole] = {
-			requires: []
-		};
-		$rootScope.build.teamArchetypes[archetype].newrole = "";
+		if (!hasProperty($rootScope.build.teamArchetypes[archetype].roles, $rootScope.build.teamArchetypes[archetype].newrole)) {
+			$rootScope.build.teamArchetypes[archetype].roles[$rootScope.build.teamArchetypes[archetype].newrole] = {
+				requires: []
+			};
+			$rootScope.build.teamArchetypes[archetype].newrole = "";
+		}
 	};
 
 	$scope.updateRoles = function (team) {
