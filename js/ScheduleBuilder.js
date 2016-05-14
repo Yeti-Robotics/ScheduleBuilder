@@ -414,8 +414,15 @@ app.controller("SchedulerController", function ($rootScope, $scope, $timeout) {
 			}
 			$scope.$apply();
 		},
-		accept: function (ui) {
-			return ($scope.isMultiSkillRole(ui) || $scope.isTeamArchetype(ui));
+		accept: function (droppable) {
+			var assignedRoles = $rootScope.build.days[$scope.currentDay].roles.multiSkillRoles;
+			var assignedArchetypes = $rootScope.build.days[$scope.currentDay].roles.teamArchetypes;
+			
+			if ($scope.isMultiSkillRole($($(droppable)[0]))) {
+				return assignedRoles.indexOf($($(droppable)[0]).attr("id")) == -1;
+			} else if ($scope.isTeamArchetype($($(droppable)[0]))) {
+				return assignedArchetypes.indexOf($($(droppable)[0]).attr("id")) == -1;
+			}
 		},
 		addClasses: false,
 		tolerance: "pointer"
