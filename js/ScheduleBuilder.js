@@ -3,6 +3,7 @@ app = angular.module('app', []);
 
 app.controller("InfoPageController", function ($rootScope, $scope, $http) {
 	$scope.templateBuild = {
+		schedule: "Template",
 		people: {
 			"Admin McCoolPants": {
 				skills: [0, 1]
@@ -308,7 +309,7 @@ app.controller("ScheduleBuilderController", function ($rootScope, $scope) {
 				var role = $($(this)[0]).attr("id").split("|")[1];
 				var requiredSkills = $rootScope.build.teamArchetypes[archetypeName].roles[role].requires;
 				var skill = $($(droppable)[0]).attr("id");
-				
+
 				return requiredSkills.every(function (requiredSkill) {
 					return requiredSkill != skill
 				});
@@ -337,7 +338,7 @@ app.controller("ScheduleBuilderController", function ($rootScope, $scope) {
 				var role = $($(this)[0]).attr("id").split("|")[1];
 				var requiredSkills = $rootScope.build.teamArchetypes[archetype].roles[role].requires;
 				console.log(learnedSkills);
-				
+
 				return requiredSkills.every(function (requiredSkill) {
 					return !(learnedSkills.indexOf(requiredSkill) == -1);
 				});
@@ -404,7 +405,7 @@ app.controller("ScheduleBuilderController", function ($rootScope, $scope) {
 	};
 });
 
-app.controller("SchedulerController", function ($rootScope, $scope, $timeout) {
+app.controller("SchedulerController", function ($rootScope, $scope, $timeout, $http) {
 
 	$scope.currentDay = 0;
 
@@ -512,7 +513,15 @@ app.controller("SchedulerController", function ($rootScope, $scope, $timeout) {
 				$rootScope.build.days[$scope.currentDay].shifts[index][id[1]] = ui.draggable[0].id;
 				$scope.$apply();
 			},
-			accept: ".sched-draggable-team",
+			accept: function (droppable) {
+				if (!$($(droppable)[0]).hasClass("sched-draggable-team")) {
+					return false;
+				} else if (this.id.split("|")[1] === $rootScope.build.teams[droppable[0].id].archetype) {
+					return true;
+				} else {
+					return false;
+				}
+			},
 			addClasses: false,
 			tolerance: "pointer"
 		});
@@ -528,10 +537,23 @@ app.controller("SchedulerController", function ($rootScope, $scope, $timeout) {
 						index = i;
 					}
 				});
+
+
 				$rootScope.build.days[$scope.currentDay].shifts[index][id[1]] = ui.draggable[0].id;
 				$scope.$apply();
 			},
-			accept: ".sched-draggable-person",
+			accept: function (droppable) {
+				if (!$($(droppable)[0]).hasClass("sched-draggable-person")) {
+					return false;
+				}
+				var id = droppable[0].id;
+				var learnedSkills = $rootScope.build.people[id].skills;
+				var multiSkillRole = this.id.split("|")[1];
+				var requiredSkills = $rootScope.build.multiSkillRoles[multiSkillRole].requires;
+				return requiredSkills.every(function (requiredSkill) {
+					return !(learnedSkills.indexOf(requiredSkill) == -1);
+				});
+			},
 			addClasses: false,
 			tolerance: "pointer"
 		});
@@ -555,6 +577,9 @@ app.controller("SchedulerController", function ($rootScope, $scope, $timeout) {
 
 	$scope.removeRole = function (role) {
 		$rootScope.build.days[$scope.currentDay].roles.multiSkillRoles.splice($rootScope.build.days[$scope.currentDay].roles.multiSkillRoles.indexOf(role), 1);
+		$rootScope.build.days[$scope.currentDay].shifts.forEach(function (e, i, arr) {
+			delete $rootScope.build.days[$scope.currentDay].shifts[i][role];
+		});
 	};
 
 	$scope.removeTeamArchetype = function (teamArchetype) {
@@ -588,7 +613,7 @@ app.controller("SchedulerController", function ($rootScope, $scope, $timeout) {
 
 				csv["days"][i]["shifts"][j]["start"] = start[0] + ":" + start[2] + " " + start[3];
 				csv["days"][i]["shifts"][j]["end"] = end[0] + ":" + end[2] + " " + end[3];
-				
+
 				csv["days"][i]["shifts"][j]["start"] = start.join(" ");
 				csv["days"][i]["shifts"][j]["end"] = end.join(" ");
 			}
@@ -640,5 +665,18 @@ app.controller("SchedulerController", function ($rootScope, $scope, $timeout) {
 
 		$("#downloadCsv").attr("href", "data:text/csv;charset=utf-8," + encodeURI(csvData));
 		$("#downloadCsv").attr("download", csv["competitionName"].replace(/ /g, "_") + "_Schedule.csv");
+
+		//This will upload the data to the server, if the user wants to
+		if (window.confirm("Would you like to upload this Schedule?")) {
+			var password = window.prompt("What is the password?");
+			$http.post('php/insertSchedule.php', {
+				password: password,
+				schedule: $rootScope.build
+			}).then(function (response) {
+				if (response.data.error) {
+					alert(response.data.error);
+				}
+			});
+		}
 	};
 });
