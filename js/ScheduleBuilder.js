@@ -223,16 +223,22 @@ app.controller("ScheduleBuilderController", function ($rootScope, $scope) {
 		$(".draggable-person").droppable({
 			drop: function (event, ui) {
 				var newSkillId = parseInt(ui.draggable[0].id);
-				if ($.inArray(newSkillId, $rootScope.build.people[event.target.id].skills) === -1) {
-					$rootScope.build.people[event.target.id].skills.push(newSkillId);
-					$scope.$apply();
-				} else {
-					console.log("That person already has that skill!")
-				}
+				$rootScope.build.people[event.target.id].skills.push(newSkillId);
+				$scope.$apply();
 			},
-			accept: ".draggable-skill",
+			accept: function (droppable) {
+				if (!$($(droppable)[0]).hasClass("draggable-skill")) {
+					return false;
+				}
+				var person = $rootScope.build.people[$(this).attr("id")];
+				var skill = $($(droppable)[0]).attr("id");
+				return person.skills.every(function (learnedSkill) {
+					return learnedSkill != skill;
+				});
+			},
 			addClasses: false,
-			activeClass: "droppable"
+			activeClass: "droppable",
+			tolerance: "pointer"
 		});
 
 	};
@@ -244,16 +250,22 @@ app.controller("ScheduleBuilderController", function ($rootScope, $scope) {
 		$(".draggable-multi-skill-role").droppable({
 			drop: function (event, ui) {
 				var newSkillId = parseInt(ui.draggable[0].id);
-				if ($.inArray(newSkillId, $rootScope.build.multiSkillRoles[event.target.id].requires) === -1) {
-					$rootScope.build.multiSkillRoles[event.target.id].requires.push(newSkillId);
-					$scope.$apply();
-				} else {
-					console.log("That multi skill role already requires that skill!")
-				}
+				$rootScope.build.multiSkillRoles[event.target.id].requires.push(newSkillId);
+				$scope.$apply();
 			},
-			accept: ".draggable-skill",
+			accept: function (droppable) {
+				if (!$($(droppable)[0]).hasClass("draggable-skill")) {
+					return false;
+				}
+				var requiredSkills = $rootScope.build.multiSkillRoles[$(this).attr("id")].requires;
+				var skill = $($(droppable)[0]).attr("id");
+				return requiredSkills.every(function (requiredSkill) {
+					return requiredSkill != skill
+				});
+			},
 			addClasses: false,
-			activeClass: "droppable"
+			activeClass: "droppable",
+			tolerance: "pointer"
 		});
 	};
 
@@ -262,54 +274,54 @@ app.controller("ScheduleBuilderController", function ($rootScope, $scope) {
 			drop: function (event, ui) {
 				var newSkillId = parseInt(ui.draggable[0].id);
 				var role = event.target.id.split("|");
-				if ($.inArray(newSkillId, $rootScope.build.teamArchetypes[role[0]].roles[role[1]].requires) === -1) {
-					$rootScope.build.teamArchetypes[role[0]].roles[role[1]].requires.push(newSkillId);
-					$scope.$apply();
-				} else {
-					console.log("That role already requires that skill!")
-				}
+				$rootScope.build.teamArchetypes[role[0]].roles[role[1]].requires.push(newSkillId);
+				$scope.$apply();
 			},
-			accept: ".draggable-skill",
+			accept: function (droppable) {
+				if (!$($(droppable)[0]).hasClass("draggable-skill")) {
+					return false;
+				}
+				var archetypeName = $($(this)[0]).attr("id").split("|")[0];
+				var role = $($(this)[0]).attr("id").split("|")[1];
+				var requiredSkills = $rootScope.build.teamArchetypes[archetypeName].roles[role].requires;
+				var skill = $($(droppable)[0]).attr("id");
+				
+				return requiredSkills.every(function (requiredSkill) {
+					return requiredSkill != skill
+				});
+			},
 			addClasses: false,
-			activeClass: "droppable"
+			activeClass: "droppable",
+			tolerance: "pointer"
 		});
 	};
 
-	$scope.refreshTeamMemberDraggability = function (role) {
+	$scope.refreshTeamMemberDraggability = function () {
 		$(".draggable-team-member").droppable({
 			drop: function (event, ui) {
 				var memberName = ui.draggable[0].id;
 				var role = event.target.id.split("|");
-				console.log(memberName);
-				console.log(role);
 				$rootScope.build.teams[role[0]].members[role[1]] = memberName;
 				$scope.$apply();
 			},
-			accept: function (dropped) {
-				var children = $(dropped).children();
-				var skills = {};
-				for (var i = 0; i < children.length; i++) {
-					if ($rootScope.build.skills.hasOwnProperty($(children[i]).attr("id"))) {
-						skills[$(children[i]).attr("id")] = $rootScope.build.skills[$(children[i]).attr("id")];
-					}
+			accept: function (droppable) {
+				if (!$($(droppable)[0]).hasClass("draggable-person")) {
+					return false;
 				}
-				var requiredSkills = {};
-				for (var i = 0; i < role.requires.length; i++) {
-					if ($rootScope.build.skills.hasOwnProperty(role.requires[i])) {
-						requiredSkills[role.requires[i]] = $rootScope.build.skills[role.requires[i]];
-					}
-				}
-
-				for (var requiredSkill in requiredSkills) {
-					if (requiredSkills[requiredSkill] != skills[requiredSkill]) {
-						return false;
-					}
-				}
-
-				return true;
+				var learnedSkills = $rootScope.build.people[$($(droppable)[0]).attr("id")].skills;
+				var team = $($(this)[0]).attr("id").split("|")[0];
+				var archetype = $rootScope.build.teams[team].archetype;
+				var role = $($(this)[0]).attr("id").split("|")[1];
+				var requiredSkills = $rootScope.build.teamArchetypes[archetype].roles[role].requires;
+				console.log(learnedSkills);
+				
+				return requiredSkills.every(function (requiredSkill) {
+					return !(learnedSkills.indexOf(requiredSkill) == -1);
+				});
 			},
 			addClasses: false,
-			activeClass: "droppable"
+			activeClass: "droppable",
+			tolerance: "pointer"
 		});
 	};
 
@@ -405,7 +417,8 @@ app.controller("SchedulerController", function ($rootScope, $scope, $timeout) {
 		accept: function (ui) {
 			return ($scope.isMultiSkillRole(ui) || $scope.isTeamArchetype(ui));
 		},
-		addClasses: false
+		addClasses: false,
+		tolerance: "pointer"
 	});
 
 	$scope.changeDay = function (index) {
@@ -470,7 +483,8 @@ app.controller("SchedulerController", function ($rootScope, $scope, $timeout) {
 				$scope.$apply();
 			},
 			accept: ".sched-draggable-team",
-			addClasses: false
+			addClasses: false,
+			tolerance: "pointer"
 		});
 	};
 
@@ -488,7 +502,8 @@ app.controller("SchedulerController", function ($rootScope, $scope, $timeout) {
 				$scope.$apply();
 			},
 			accept: ".sched-draggable-person",
-			addClasses: false
+			addClasses: false,
+			tolerance: "pointer"
 		});
 	};
 

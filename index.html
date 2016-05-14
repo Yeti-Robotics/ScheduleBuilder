@@ -83,7 +83,7 @@
 			<div class="well well-sm sb-panel-item draggable-team" ng-repeat="(name, team) in build.teams">{{name}} (archetype:
 				<select ng-model="team.archetype" ng-options="name as name for (name, teamArchetype) in build.teamArchetypes" ng-change="updateRoles(name)"></select>)
 				<button type="button" ng-click="removeRoot('Team', name)" class="btn badge"><span class="glyphicon glyphicon-remove"></span></button>
-				<div class="sb-panel-item team-role draggable-team-member" ng-repeat="(roleName, role) in build.teamArchetypes[team.archetype].roles" ng-init="refreshTeamMemberDraggability(role)" id="{{name + '|' + roleName}}">{{roleName}}
+				<div class="sb-panel-item team-role draggable-team-member" ng-repeat="(roleName, role) in build.teamArchetypes[team.archetype].roles" ng-init="refreshTeamMemberDraggability()" id="{{name + '|' + roleName}}">{{roleName}}
 					<div class="person pull-right">{{team.members[roleName]}}</div>
 				</div>
 			</div>
