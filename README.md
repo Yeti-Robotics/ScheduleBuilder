@@ -1,11 +1,5 @@
 # To-Do List
-- [ ] Main page
-  - [ ] List of schedules
-- [ ] List of students page
-  - [ ] Table of students and their skills
-  - [ ] List of skills
-- [ ] Schedule builder page
-  - [ ] Competition names field
-  - [ ] If possible, overview of schedule should look something like the day view of Google Calendar
-    - [ ] Clicking each shift should trigger a modal that has a checklist of all eligible students for that shift 
-    - [ ] Able to drag around time shifts
+- [ ] Prevent creation of items with the same name in the same category
+- [ ] Check role eligibility in schedule builder
+- [ ] Prevent double-booking people
+- [ ] Only allow teams to be assigned to their respective archetypes in schedule builder
